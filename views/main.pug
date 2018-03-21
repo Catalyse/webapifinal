@@ -1,0 +1,32 @@
+doctype html
+html
+  head
+    title= title
+    script(type='text/javascript', src='/javascripts/jquery-3.2.1.js')
+    script(type='text/javascript', src='/javascripts/semantic.js')
+    link(rel='stylesheet', type='text/css', href='/stylesheets/semantic.min.css')
+    style.
+      .noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+          -webkit-user-select: none; /* Safari */
+          -khtml-user-select: none; /* Konqueror HTML */
+            -moz-user-select: none; /* Firefox */
+              -ms-user-select: none; /* Internet Explorer/Edge */
+                  user-select: none; /* Non-prefixed version, currently
+                                        supported by Chrome and Opera */
+      }
+      .disabled {
+        color: #cccccc;
+      }
+  body
+    .ui.light.blue.inverted.menu
+      .ui.container
+        .ui.inverted.secondary.menu
+          h1(style='color:white;') IoT Map Project
+    .ui.grid.container
+      .row
+        #map(style='height:800px;width:100%;')
+
+  script(type='text/javascript', src='/javascripts/main.js')
+  script(type='text/javascript', src='/javascripts/maphandler.js')
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDO5J6k4QPBpiLA_ppZCQkEEV5dlDAg47k')
