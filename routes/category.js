@@ -4,9 +4,17 @@ var general = require('../security');
 
 //User Post Requests ------------------------------------------------------------------------------------------------------
 router.post('/add', function(req, res) {
-  general.PostTokenCheck(req, res, "charity/add", "ADD", function(result) {
+  general.PostTokenCheck(req, res, "category/add", "ADD", function(result) {
     if(result == true) {
-      general.pool.query("INSERT INTO `category` (`name`, `description`) VALUES (" + general.mysql.escape(req.body.name) + "," + general.mysql.escape(req.body.description) + "");")
+      general.pool.query("INSERT INTO `category` (`name`, `description`) VALUES (" + general.mysql.escape(req.body.name) + 
+      "," + general.mysql.escape(req.body.description) + ");", function(error, result) {
+        if(error) {
+          res.send("There was an error making the query! :: " + error.message);
+        }
+        else {
+          res.send('1');
+        }
+      })
     }
     else {
       res.send("$$REDIRECT$$");
@@ -15,7 +23,7 @@ router.post('/add', function(req, res) {
 });
 
 router.post('/edit/:id', function(req, res) {
-  general.PostTokenCheck(req, res, "charity/edit", "EDIT/ID=" + req.params.id, function(result) {
+  general.PostTokenCheck(req, res, "category/edit", "EDIT/ID=" + req.params.id, function(result) {
     if(result == true) {
       general.pool.query("SELECT * FROM `category` WHERE id = " + req.params.id, function(error,result) {
         if(error) {
@@ -23,7 +31,8 @@ router.post('/edit/:id', function(req, res) {
         }
         else {
           if(result.length > 0) {
-            general.pool.query("UPDATE `category` SET `name` = " + general.mysql.escape(req.body.name) + ", `description` = " + general.mysql.escape(req.body.description), function(error, result) {
+            general.pool.query("UPDATE `category` SET `name` = " + general.mysql.escape(req.body.name) + 
+            ", `description` = " + general.mysql.escape(req.body.description) + " WHERE id = " + general.mysql.escape(req.params.id), function(error, result) {
               if(error) {
                 res.send("There was an error making the query! :: " + error.message);
               }
@@ -31,6 +40,9 @@ router.post('/edit/:id', function(req, res) {
                 res.send('1');
               }
             })
+          }
+          else {
+            res.send('$$NORESULT$$');
           }
         }
       });
@@ -42,7 +54,7 @@ router.post('/edit/:id', function(req, res) {
 });
 
 router.delete('/:id', function(req, res) {
-  general.PostTokenCheck(req, res, "charity/delete", "DELETE/ID=" + req.params.id, function(result) {
+  general.PostTokenCheck(req, res, "category/delete", "DELETE/ID=" + req.params.id, function(result) {
     if(result == true) {
       general.pool.query("SELECT * FROM `category` WHERE id = " + req.params.id, function(error,result) {
         if(error) {
@@ -59,6 +71,9 @@ router.delete('/:id', function(req, res) {
               }
             })
           }
+          else {
+            res.send('$$NORESULT$$');
+          }
         }
       });
     }
@@ -69,7 +84,7 @@ router.delete('/:id', function(req, res) {
 });
 
 router.get('/:id', function(req, res) {
-  general.PostTokenCheck(req, res, "charity/get", "GET", function(result) {
+  general.PostTokenCheck(req, res, "category/get", "GET", function(result) {
     if(result == true) {
       general.pool.query("SELECT * FROM `category` WHERE id = " + req.params.id, function(error,result) {
         if(error) {
@@ -92,7 +107,7 @@ router.get('/:id', function(req, res) {
 });
 
 router.get('/all', function(req, res) {
-  general.PostTokenCheck(req, res, "charity/all", "GET", function(result) {
+  general.PostTokenCheck(req, res, "category/all", "GET", function(result) {
     if(result == true) {
       general.pool.query("SELECT * FROM `category` WHERE id = " + req.params.id, function(error,result) {
         if(error) {
