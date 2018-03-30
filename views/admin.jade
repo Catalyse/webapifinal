@@ -1,0 +1,284 @@
+extends layout
+
+block content
+  .row
+    .four.wide.compact.column
+    .twelve.wide.compact.column
+      a.button.ui.primary.button(style='float:right;', id='adduser')
+        | Add User
+  .row(style='margin-top:0px;')
+    h3(style='padding-left:10px;') Current Users
+    table.ui.small.selectable.row.celled.expandable.table(style='margin-bottom:0; border-bottom:0;')
+      thead
+        tr
+          th Username
+          th Name
+          th Donated
+    .noscrollbar(style="max-height:40vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
+      table.ui.small.selectable.row.celled.expandable.table(style='border-top: 0;')
+        tbody(id='usertable')
+          for entry in users
+            tr.title(onclick="EditUser(#{entry.id})")
+             td #{entry.username}
+             td #{entry.name}
+             td #{entry.donated}
+
+  .ui.modal.adduser
+    .header(id="usermodalheader")
+      | System User Registration
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    form.ui.form(style="margin:10px 20px 10px 20px;", method="POST", id='userform', name='userform')
+      input(value='false', name='userEditMode', id='userEditMode', type='hidden')
+      input(value='false', name='userIDField', id='userIDField', type='hidden')
+      .two.fields
+        #userfnamebox.field
+          label First Name
+          input(placeholder='John', name='fname', type='text')
+        #userlnamebox.field
+          label Last Name
+          input(placeholder='Doe', name='lname', type='text')
+      .three.fields
+        #userunamebox.field
+          label Username
+          input(placeholder='JohnDoe123', name='username', type='text')
+        #userpassbox.field
+          label Password
+          input(placeholder='Password123', type='password', name='password')
+        #userpassvbox.field
+          label Verify Password
+          input(placeholder='Password123', type='password', name='passwordverify')
+      .two.fields
+        #useremailbox.field
+          label Email
+          input(placeholder='you@example.com', name='email', type='text')
+        #userrolebox.field
+          label User Role
+          select.ui.fluid.dropdown(type='number', name='permid', value="0",onchange='UserDriverMode()')
+            option(value='') Select Role
+            option(value='1') 1 - Administrator  
+            option(value='2') 2 - Office
+            option(value='3') 3 - Dispatcher
+            option(value='4') 4 - Driver
+      #driverlist.field.disabled
+        label Linked Driver
+        select.ui.fluid.search.dropdown(name='linkeddriver', id='linkeddriver')
+          option(value='') Choose Driver
+          for driver in drivers
+            option(value='#{driver.driver_id}') #{driver.firstname} #{driver.lastname}
+      .ui.error.message
+        .header Error
+        p(id='userformerrormsg') Error!
+    .actions
+      .ui.negative.labeled.icon.button(id='deleteuserbutton', style='float:left;')
+        | Delete User
+        i.cancel.icon
+      .ui.neutral.right.labeled.button(onclick='CloseUserModal()')
+        | Cancel
+      .ui.positive.right.labeled.icon.button(id='usersubmit')
+        | Submit
+        i.checkmark.icon
+
+  .ui.modal.adddriver
+    .header(id="drivermodalheader")
+      | Add Driver
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    form.ui.form(style="margin:10px 20px 10px 20px;", method="POST", id='driverform', name='driverform')
+      p 
+        b Name
+      input(value='false', name='driverEditMode', id='driverEditMode', type='hidden')
+      input(value='false', name='driverIDField', id='driverIDField', type='hidden')
+      .three.fields
+        #drivfnamebox.field
+          label First Name
+          input(placeholder='John', name='fname', type='text')
+        .field
+          label Middle Name
+          input(placeholder='C', name='mname', type='text')
+        #drivlnamebox.field
+          label Last Name
+          input(placeholder='Smith', name='lname', type='text')
+      p
+        b Misc Info
+      .three.fields
+        #drivphonebox.field
+          label Phone Number
+          input(placeholder='xxxxxxxxx', name='phonenumber', id='driverphone')
+        #drivlicensebox.field
+          label CDL Number
+          input(placeholder='License No.', name='licenseno', id='drivercdl', onkeypress="return event.charCode >= 48 && event.charCode <= 57", title="Numbers only")
+        #drivpercentbox.field
+          label Driver Pay Percent
+          input(placeholder='80.5', name='driverpaypercent', id='driverpaypercent')
+      p 
+        b Home Address
+      #drivstreetbox.field
+        label Street
+        input(placeholder='123 Main Street.', name='street', type='text')
+      .three.fields
+        #drivcitybox.field
+          label City
+          input(placeholder='City', name='city', type='text')
+        #drivstatebox.field
+          label State
+          select.ui.fluid.dropdown(name='state')
+            option(value='') Pick a State
+            option(value='AL') Alabama
+            option(value='AK') Alaska
+            option(value='AZ') Arizona
+            option(value='AR') Arkansas
+            option(value='CA') California
+            option(value='CO') Colorado
+            option(value='CT') Connecticut
+            option(value='DE') Delaware
+            option(value='DC') District Of Columbia
+            option(value='FL') Florida
+            option(value='GA') Georgia
+            option(value='HI') Hawaii
+            option(value='ID') Idaho
+            option(value='IL') Illinois
+            option(value='IN') Indiana
+            option(value='IA') Iowa
+            option(value='KS') Kansas
+            option(value='KY') Kentucky
+            option(value='LA') Louisiana
+            option(value='ME') Maine
+            option(value='MD') Maryland
+            option(value='MA') Massachusetts
+            option(value='MI') Michigan
+            option(value='MN') Minnesota
+            option(value='MS') Mississippi
+            option(value='MO') Missouri
+            option(value='MT') Montana
+            option(value='NE') Nebraska
+            option(value='NV') Nevada
+            option(value='NH') New Hampshire
+            option(value='NJ') New Jersey
+            option(value='NM') New Mexico
+            option(value='NY') New York
+            option(value='NC') North Carolina
+            option(value='ND') North Dakota
+            option(value='OH') Ohio
+            option(value='OK') Oklahoma
+            option(value='OR') Oregon
+            option(value='PA') Pennsylvania
+            option(value='RI') Rhode Island
+            option(value='SC') South Carolina
+            option(value='SD') South Dakota
+            option(value='TN') Tennessee
+            option(value='TX') Texas
+            option(value='UT') Utah
+            option(value='VT') Vermont
+            option(value='VA') Virginiarequest/addload
+            option(value='WA') Washington
+            option(value='WV') West Virginia
+            option(value='WI') Wisconsin
+            option(value='WY') Wyoming
+        #drivzipbox.field
+          label Zip
+          input(placeholder='xxxxx', name='zip', id='driverzip')
+      .ui.error.message
+        .header Error
+        p(id='driverformerrormsg') Error!
+    .actions
+      .ui.negative.labeled.icon.button(id='deletedriverbutton', style='float:left;')
+        | Delete Driver
+        i.cancel.icon
+      .ui.neutral.right.labeled.button(onclick='CloseDriverModal()')
+        | Cancel
+      .ui.positive.right.labeled.icon.button(id='driversubmit')
+        | Submit
+        i.checkmark.icon
+
+  .ui.modal.addtrailer
+    .header(id="trailermodalheader")
+      | Add Trailer
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    form.ui.form(style="margin:10px 20px 10px 20px;", method="POST", id='trailerform', name='trailerform')
+      input(value='false', name='trailerEditMode', id='trailerEditMode', type='hidden')
+      input(value='false', name='trailerIDField', id='trailerIDField', type='hidden')
+      .two.fields
+        .field(id='traileridfield')
+          label Trailer ID
+          input(placeholder='ID', name='id', type='text', onkeypress="return event.charCode >= 48 && event.charCode <= 57", title="Numbers only")
+        .field
+          label Milage (If left blank it will default to zero)
+          input(placeholder='1004.54', name='trailermiles', id='trailermiles')
+      .ui.error.message
+        .header Error
+        p(id='trailerformerrormsg') Error!
+    .actions
+      .ui.negative.labeled.icon.button(id='deletetrailerbutton', style='float:left;')
+        | Delete Trailer
+        i.cancel.icon
+      .ui.neutral.right.labeled.button(onclick='CloseTrailerModal()')
+        | Cancel
+      .ui.positive.right.labeled.icon.button(id='trailersubmit')
+        | Submit
+        i.checkmark.icon
+
+  .ui.modal.loglist
+    .header
+      | Log List
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .scrolling.content(style='padding: 0 0 0 0;')
+      table.ui.small.selectable.row.celled.expandable.table(style='margin-bottom:0; border-bottom:0;')
+        thead
+          tr
+            th(style='width: 20%') Time
+            th(style='width: 15%') Type
+            th(style='width: 10%') User
+            th(style='width: 55%') Message
+      .noscrollbar(style="max-height:60vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
+        table.ui.small.selectable.row.celled.expandable.table(style="border-top: 0;")
+          tbody(id='logtable')
+            for log in logs
+              tr.title
+                td(style='width: 20%') #{log.time}
+                td(style='width: 15%') #{log.type}
+                td(style='width: 10%') #{log.user}
+                td(style='width: 55%') #{log.message}
+    .actions
+      .ui.positive.right.labeled.icon.button
+        | Close
+        i.checkmark.icon
+  
+  .ui.modal.successprompt
+    .header
+      | Success
+    .ui.success.message(style='margin-left:10px;margin-right:10px;')
+      .header Success
+      p(id='successprompttext') Driver Added!
+    .actions
+      .ui.positive.right.labeled.icon.button
+        | Okay
+        i.checkmark.icon
+
+  .ui.modal.warningprompt
+    .header(id='warningheader')
+      | Warning: Deleting
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.warning.message(style='margin-left:10px;margin-right:10px;')
+      .header Warning
+      p(id='warningprompttext') Driver Added!
+    .actions
+      .ui.right.labeled.button(id='warningbuttoncancel')
+        | Cancel
+      .ui.negative.right.labeled.icon.button(id='warningbuttonsubmit')
+        | Delete
+        i.cancel.icon
+        
+  .ui.modal.unauthprompt
+    .header(id='unauthheader')
+      | Unauthorized Access
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.warning.message(style='margin-left:10px;margin-right:10px;')
+      .header Unauthorized
+      p You have attempted to make a request that you are not authorized to do
+    .actions
+      .ui.right.labeled.icon.button(id='unauthbuttoncancel')
+        | Continue
+        i.cancel.icon
+
+
+  script(type='text/javascript', src='/javascripts/admin.js')
+  script(type='text/javascript', src='/javascripts/adminvalidation.js')

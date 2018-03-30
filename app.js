@@ -6,6 +6,8 @@ var bodyParser = require('body-parser');
 var dotenv = require("dotenv").config();
 
 var router = require('./routes/router');
+var request = require('./routes/request');
+var user = require('./routes/user');
 
 var app = express();
 
