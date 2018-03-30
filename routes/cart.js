@@ -40,30 +40,51 @@ router.post('/add/:id', function(req, res) {
 router.post('/item/add/:id', function(req, res) {
   general.PostTokenCheck(req, res, "cart/item/add", "ADD", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `cart` WHERE uid = " + general.mysql.escape(req.params.id), function(error, result) {
+      general.pool.query("SELECT * FROM `user` WHERE username = " + req.signedCookies.session.split("@")[0], function(error,result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }
         else {
-          if(result.length > 0) {
-            if(result[0].contents == '') {
-              var contents = req.body.item + "%" + req.body.quantity;
+          var uid = result[0].id;
+          general.pool.query("SELECT * FROM `cart` WHERE uid = " + uid, function(error, result) {
+            if(error) {
+              res.send("There was an error making the query! :: " + error.message);
             }
             else {
-              var contents = contents + "$$" + req.body.item + "%" + req.body.quantity;
-            }
-            general.pool.query("UPDATE `carts` SET `contents` = " + general.mysql.escape(contents) + " WHERE uid = " + general.mysql.escape(req.params.id), function(error, result) {
-              if(error) {
-                res.send("There was an error making the query! :: " + error.message);
+              if(result.length > 0) {
+                var cart = result[0];
+                general.pool.query("SELECT * FROM `product` WHERE id = " + general.mysql.escape(req.params.id), function(error,result) {
+                  if(error) {
+                    res.send("There was an error making the query! :: " + error.message);
+                  }
+                  else {
+                    if(result[0].quantity > 0) {
+                      if(cart.contents == '') {
+                        var contents = req.body.item + "%" + req.body.quantity;
+                      }
+                      else {
+                        var contents = contents + "$$" + req.body.item + "%" + req.body.quantity;
+                      }
+                      general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(contents) + " WHERE uid = " + uid, function(error, result) {
+                        if(error) {
+                          res.send("There was an error making the query! :: " + error.message);
+                        }
+                        else {
+                          res.send('1');
+                        }
+                      });
+                    }
+                    else {
+                      res.send("This item is out of stock!");
+                    }
+                  }
+                });
               }
               else {
-                res.send('1');
+                res.send("A cart does not exist for this user!");
               }
-            });
-          }
-          else {
-            res.send("A cart does not exist for this user!");
-          }
+            }
+          });
         }
       });
     }
@@ -73,33 +94,54 @@ router.post('/item/add/:id', function(req, res) {
   });
 });
 
+//Contents structure:
+//ItemID%Quantity$$ItemID%Quantity$$...
 router.post('/item/remove/:id', function(req, res) {
-  general.PostTokenCheck(req, res, "cart/item/remove", "EDIT/ID=" + req.params.id, function(result) {
+  general.PostTokenCheck(req, res, "cart/item/add", "ADD", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `cart` WHERE uid = " + general.mysql.escape(req.params.id), function(error, result) {
+      general.pool.query("SELECT * FROM `user` WHERE username = " + req.signedCookies.session.split("@")[0], function(error,result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }
         else {
-          if(result.length > 0) {
-            if(result[0].contents == '') {
-              var contents = req.body.item + "%" + req.body.quantity;
+          var uid = result[0].id;
+          general.pool.query("SELECT * FROM `cart` WHERE uid = " + uid, function(error, result) {
+            if(error) {
+              res.send("There was an error making the query! :: " + error.message);
             }
             else {
-              var contents = contents + "$$" + req.body.item + "%" + req.body.quantity;
-            }
-            general.pool.query("UPDATE `carts` SET `contents` = " + general.mysql.escape(contents) + " WHERE uid = " + general.mysql.escape(req.params.id), function(error, result) {
-              if(error) {
-                res.send("There was an error making the query! :: " + error.message);
+              if(result.length > 0) {
+                if(result[0].contents == '') {
+                  res.send('There is no product with that ID in the cart.');
+                }
+                else {
+                  var newContents = '';
+                  var contents = result[0].split('$$');
+                  for(i = 0; i < content.length; i++) {
+                    if(contents[i].split("%")[0] != req.params.id) {
+                      if(newContents == '') {
+                        newContents = contents[i];
+                      }
+                      else {
+                        newContents = newContents + "$$" + contents[i];
+                      }
+                    }
+                  }
+                  general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(contents) + " WHERE uid = " + uid, function(error, result) {
+                    if(error) {
+                      res.send("There was an error making the query! :: " + error.message);
+                    }
+                    else {
+                      res.send('1');
+                    }
+                  });
+                }
               }
               else {
-                res.send('1');
+                res.send("A cart does not exist for this user!");
               }
-            });
-          }
-          else {
-            res.send("A cart does not exist for this user!");
-          }
+            }
+          });
         }
       });
     }

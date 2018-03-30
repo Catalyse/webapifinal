@@ -3,9 +3,6 @@ var router = express.Router();
 var passcrypt = require('password-hash-and-salt');
 var general = require('../security');
 
-
-var username = "taylor";
-var password = "password";
 /* This script will be used to make db requests and other types of posts */
 router.post('/login', function(req, res) {
   var username = req.body.username;
