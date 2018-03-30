@@ -15,7 +15,7 @@ router.post('/add', function(req, res) {
         else {
           res.send('1');
         }
-      })
+      });
     }
     else {
       res.send("$$REDIRECT$$");

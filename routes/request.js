@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var passcrypt = require('password-hash-and-salt');
-var general = require('tmsgeneric/general.js');
+var general = require('../security');
 
 
 var username = "taylor";
