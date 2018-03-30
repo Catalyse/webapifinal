@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var general = require('tmsgeneric/general.js');
-var passcrypt = require("password-hash-and-salt");
+var general = require('../security');
 
 //User Post Requests ------------------------------------------------------------------------------------------------------
 router.post('/add/:cartid/:donating/:donationamount', function(req, res) {

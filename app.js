@@ -8,6 +8,10 @@ var dotenv = require("dotenv").config();
 var router = require('./routes/router');
 var request = require('./routes/request');
 var user = require('./routes/user');
+var charity = require('./routes/user');
+var product = require('./routes/user');
+var cart = require('./routes/user');
+var transaction = require('./routes/user');
 
 var app = express();
 
@@ -22,6 +26,12 @@ app.use(cookieParser('123'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', router);
+app.use('/r/', request);
+app.use('/r/user', user);
+app.use('/r/charity', charity);
+app.use('/r/product', product);
+app.use('/r/cart', cart);
+app.use('/r/transaction', transaction);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

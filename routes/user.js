@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var general = require('tmsgeneric/general.js');
 var passcrypt = require("password-hash-and-salt");
+var general = require('../security');
 
 //User Post Requests ------------------------------------------------------------------------------------------------------
 router.post('/add', function(req, res) {
@@ -10,16 +10,12 @@ router.post('/add', function(req, res) {
       var username = req.body.username;
       username = username.toLowerCase();
       var password = req.body.password;
-      var fname = req.body.fname;
-      var lname = req.body.lname;
-      var email = req.body.email;
-      var permid = req.body.permid;
-      var linkeddriver = req.body.linkeddriver;
+      var name = req.body.name;
       passcrypt(password).hash(function(error, hash) {
         if(error) {
           res.send("Error Contact Developer! -- ErrMSG: " + error.message);
         }//TODO: Split salt off hash and store in separate table.
-        general.pool.query("INSERT INTO `users` (`username`, `password`, `fname`, `lname`, `permissionsid`, `email`, `userid`) VALUES (" + general.mysql.escape(username) + ", " + general.mysql.escape(hash) + ", " + general.mysql.escape(fname) + ", " + general.mysql.escape(lname) + ", " + general.mysql.escape(permid) + ", " + general.mysql.escape(email) + ", " + general.mysql.escape(linkeddriver) + ")", function(error,result,fields){
+        general.pool.query("INSERT INTO `users` (`username`, `password`, `name`, `donated`) VALUES (" + general.mysql.escape(username) + ", " + general.mysql.escape(hash) + ", " + general.mysql.escape(name) + ", 0)", function(error,result,fields){
           if(error){
             general.Log(req.signedCookies.session.split("@")[0], error.message, "ERROR");
             res.send("Error Contact Developer! -- ErrMSG: " + error.message);
