@@ -127,7 +127,7 @@ router.post('/item/remove/:id', function(req, res) {
                       }
                     }
                   }
-                  general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(contents) + " WHERE uid = " + uid, function(error, result) {
+                  general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(newContents) + " WHERE uid = " + uid, function(error, result) {
                     if(error) {
                       res.send("There was an error making the query! :: " + error.message);
                     }
@@ -138,7 +138,7 @@ router.post('/item/remove/:id', function(req, res) {
                 }
               }
               else {
-                res.send("A cart does not exist for this user!");
+                res.send('$$NORESULT$$');
               }
             }
           });
@@ -151,27 +151,35 @@ router.post('/item/remove/:id', function(req, res) {
   });
 });
 
-router.delete('/:id', function(req, res) {
-  general.PostTokenCheck(req, res, "cart/delete", "DELETE/ID=" + req.params.id, function(result) {
+router.delete('/', function(req, res) {
+  general.PostTokenCheck(req, res, "cart/delete", "DELETE/ID=", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `cart` WHERE uid = " + general.mysql.escape(req.params.id), function(error, result) {
+      general.pool.query("SELECT * FROM `user` WHERE username = " + req.signedCookies.session.split("@")[0], function(error,result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }
         else {
-          if(result.length > 0) {
-            general.pool.query("DELETE FROM `cart` WHERE uid = " + general.mysql.escape(req.params.id), function(error, result) {
-              if(error) {
-                res.send("There was an error making the query! :: " + error.message);
+          var uid = result[0].id;
+          general.pool.query("SELECT * FROM `cart` WHERE uid = " + general.mysql.escape(uid), function(error, result) {
+            if(error) {
+              res.send("There was an error making the query! :: " + error.message);
+            }
+            else {
+              if(result.length > 0) {
+                general.pool.query("DELETE FROM `cart` WHERE uid = " + general.mysql.escape(uid), function(error, result) {
+                  if(error) {
+                    res.send("There was an error making the query! :: " + error.message);
+                  }
+                  else {
+                    res.send('1');
+                  }
+                });
               }
               else {
-                res.send('1');
+                res.send('$$NORESULT$$');
               }
-            });
-          }
-          else {
-            res.send("A cart does not exist for this user!");
-          }
+            }
+          });
         }
       });
     }
@@ -184,7 +192,27 @@ router.delete('/:id', function(req, res) {
 router.get('/:id', function(req, res) {
   general.PostTokenCheck(req, res, "product/get", "GET", function(result) {
     if(result == true) {
-      
+      general.pool.query("SELECT * FROM `user` WHERE username = " + req.signedCookies.session.split("@")[0], function(error,result) {
+        if(error) {
+          res.send("There was an error making the query! :: " + error.message);
+        }
+        else {
+          var uid = result[0].id;
+          general.pool.query("SELECT * FROM `cart` WHERE uid = " + uid, function(error, result) {
+            if(error) {
+              res.send("There was an error making the query! :: " + error.message);
+            }
+            else {
+              if(result.length > 0) {
+                res.send(result[0]);
+              }
+              else {
+                res.send('$$NORESULT$$');
+              }
+            }
+          });
+        }
+      });
     }
     else {
       res.send("$$REDIRECT$$");
@@ -192,14 +220,4 @@ router.get('/:id', function(req, res) {
   });
 });
 
-router.get('/all', function(req, res) {
-  general.PostTokenCheck(req, res, "product/all", "GET", function(result) {
-    if(result == true) {
-      
-    }
-    else {
-      res.send("$$REDIRECT$$");
-    }
-  });
-});
 module.exports = router;
