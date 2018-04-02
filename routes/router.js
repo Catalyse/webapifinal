@@ -31,10 +31,6 @@ router.get('/logout', function(req, res, next) {
   res.redirect(307, "/");
 });
 
-router.use('*', function(req, res) {
-  res.send('Invalid Request or Type');
-});
-
 router.get('/admin', function(req, res, next) {
   if(req.signedCookies.session != null && req.signedCookies.session != false){
     general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
@@ -57,5 +53,9 @@ function AdminRender(res, user){
     }
   });
 }
+
+router.use('*', function(req, res) {
+  res.send('Invalid Request or Type');
+});
 
 module.exports = router;
