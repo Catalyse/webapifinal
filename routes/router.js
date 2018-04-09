@@ -31,19 +31,38 @@ router.get('/logout', function(req, res, next) {
   res.redirect(307, "/");
 });
 
-router.get('/admin', function(req, res, next) {
-  if(req.signedCookies.session != null && req.signedCookies.session != false){
+router.get('/register', function(req, res, next) {
+  res.render('register');
+});
+
+router.get('/home', function(req, res, next) {
+  /*if(req.signedCookies.session != null && req.signedCookies.session != false){
     general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
   }
   else {
     console.log("Inline redirect due to no token reported by client");
     res.redirect(307, "/?redirect=true&from=/admin");//no token exists
+  }*/
+  HomeRender(res, "TEST");
+});
+
+function HomeRender(res, user) {
+  res.render('home',{title: 'WebAPI Final Home Page'});
+}
+
+router.get('/admin', function(req, res, next) {
+  /*if(req.signedCookies.session != null && req.signedCookies.session != false){
+    general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
   }
+  else {
+    console.log("Inline redirect due to no token reported by client");
+    res.redirect(307, "/?redirect=true&from=/admin");//no token exists
+  }*/
+  AdminRender(res, "TEST");
 });
 
 function AdminRender(res, user){
-  general.Log(user, user + " accessed the Admin Page", "Navigation");
-  general.pool.query("SELECT * FROM `users`", function (err, result, fields) {
+  general.pool.query("SELECT * FROM `user`", function (err, result, fields) {
     if(err){
       res.send("Error Contact Developer! -- ErrMSG: " + err.message);
     }
@@ -53,9 +72,5 @@ function AdminRender(res, user){
     }
   });
 }
-
-router.use('*', function(req, res) {
-  res.send('Invalid Request or Type');
-});
 
 module.exports = router;

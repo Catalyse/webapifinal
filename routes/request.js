@@ -10,7 +10,7 @@ router.post('/login', function(req, res) {
   var password = req.body.password;
   var staylogged = req.body.stayloggedin;
   //console.log("Login Request: Username: " + username + " Password: " + password);
-  general.pool.query("SELECT * FROM `users` WHERE username=" + general.mysql.escape(username) + ";", function (err, result, fields) {
+  general.pool.query("SELECT * FROM `user` WHERE username=" + general.mysql.escape(username) + ";", function (err, result, fields) {
     if(err) throw err;
     var user = result;
     //console.log("Query Complete");
@@ -39,7 +39,7 @@ router.post('/login', function(req, res) {
             var sessiontoken = username + "@" + token;
             //console.log("Prepping to enter token into db");
             general.pool.query("DELETE FROM `tokentracker` WHERE `user` = '" + username + "'", function(err,result,fields) {
-              general.pool.query("INSERT INTO `tokentracker` (`token`, `user`, `permlevel`, `expiration`) VALUES ('" + token.toString() + "', '" + username + "', '" + user[0].permissionsid + "', '" + timestamp + "');");
+              general.pool.query("INSERT INTO `tokentracker` (`token`, `user`, `expiration`) VALUES ('" + token.toString() + "', '" + username + "', '" + timestamp + "');");
               res.cookie('session', sessiontoken, { 
                 maxAge: 2147483647, 
                 httpOnly: true, 
@@ -60,6 +60,27 @@ router.post('/login', function(req, res) {
       res.send("-1");//-1 indicates invalid username
     }
   })
+});
+
+router.post('/register', function(req, res) {
+  var username = req.body.username;
+  username = username.toLowerCase();
+  var password = req.body.password;
+  var name = req.body.name;
+  passcrypt(password).hash(function(error, hash) {
+    if(error) {
+      res.send("Error Contact Developer! -- ErrMSG: " + error.message);
+    }//TODO: Split salt off hash and store in separate table.
+    general.pool.query("INSERT INTO `user` (`username`, `password`, `name`, `donated`) VALUES (" + general.mysql.escape(username) + ", " + general.mysql.escape(hash) + ", " + general.mysql.escape(name) + ", 0)", function(error,result,fields){
+      if(error){
+        general.Log(req.signedCookies.session.split("@")[0], error.message, "ERROR");
+        res.send("Error Contact Developer! -- ErrMSG: " + error.message);
+      }
+      else {
+        res.send("1");
+      }
+    });
+  });
 });
 
 //This function will take the password and validate it against the existing hash

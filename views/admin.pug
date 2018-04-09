@@ -1,0 +1,99 @@
+extends layout
+
+block content
+  .row
+    .four.wide.compact.column
+    .twelve.wide.compact.column
+      a.button.ui.primary.button(style='float:right;', id='adduser')
+        | Add User
+  .row(style='margin-top:0px;')
+    h3(style='padding-left:10px;') Current Users
+    table.ui.small.selectable.row.celled.expandable.table(style='margin-bottom:0; border-bottom:0;')
+      thead
+        tr
+          th Username
+          th Name
+          th Donated
+    .noscrollbar(style="max-height:40vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
+      table.ui.small.selectable.row.celled.expandable.table(style='border-top: 0;')
+        tbody(id='usertable')
+          for entry in users
+            tr.title(onclick="EditUser(#{entry.id})")
+             td #{entry.username}
+             td #{entry.name}
+             td #{entry.donated}
+  .row(style='margin-top:0px;')
+    h3(style='padding-left:10px;') Current Charities
+    table.ui.small.selectable.row.celled.expandable.table(style='margin-bottom:0; border-bottom:0;')
+      thead
+        tr
+          th Username
+          th Name
+          th Donated
+    .noscrollbar(style="max-height:40vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
+      table.ui.small.selectable.row.celled.expandable.table(style='border-top: 0;')
+        tbody(id='usertable')
+          for entry in users
+            tr.title(onclick="EditUser(#{entry.id})")
+             td #{entry.username}
+             td #{entry.name}
+             td #{entry.donated}
+
+  .ui.modal.adduser
+    .header(id="usermodalheader")
+      | System User Registration
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    form.ui.form(style="margin:10px 20px 10px 20px;", method="POST", id='userform', name='userform')
+      input(value='false', name='userEditMode', id='userEditMode', type='hidden')
+      input(value='false', name='userIDField', id='userIDField', type='hidden')
+      .two.fields
+        .field(id='usernamefield')
+          label Username
+          input(placeholder='Enter Username', name='username', type='text')
+        .field(id='namefield')
+          label Name
+          input(placeholder='Enter Name', name='name', type='text')
+      .two.fields
+        .field(id='passwordfield')
+          label Password
+          input(placeholder='Enter Password', name='password', type='password')
+        .field(id='verifyfield')
+          label Verify Password
+          input(placeholder='Verify Password', name='verifypassword', type='password')
+      .ui.error.message
+        .header Error
+        p(id='userformerrormsg') Error!
+    .actions
+      .ui.neutral.right.labeled.button(onclick='CloseUserModal()')
+        | Cancel
+      .ui.green.right.labeled.icon.button(id='usersubmit')
+        | Submit
+        i.checkmark.icon
+  
+  .ui.modal.successprompt
+    .header
+      | Success
+    .ui.success.message(style='margin-left:10px;margin-right:10px;')
+      .header Success
+      p(id='successprompttext') User Added!
+    .actions
+      .ui.positive.right.labeled.icon.button
+        | Okay
+        i.checkmark.icon
+
+  .ui.modal.warningprompt
+    .header(id='warningheader')
+      | Warning: Deleting
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.warning.message(style='margin-left:10px;margin-right:10px;')
+      .header Warning
+      p(id='warningprompttext') Error!
+    .actions
+      .ui.right.labeled.button(id='warningbuttoncancel')
+        | Cancel
+      .ui.negative.right.labeled.icon.button(id='warningbuttonsubmit')
+        | Delete
+        i.cancel.icon
+
+  script(type='text/javascript', src='/javascripts/admin.js')
+  script(type='text/javascript', src='/javascripts/adminvalidation.js')

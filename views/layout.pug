@@ -18,15 +18,25 @@ html
       .disabled {
         color: #cccccc;
       }
+      .approved {
+        border: solid #00ff00 !important;
+        border-width: 3px !important;
+      }
+      .rejected {
+        border: solid #ff0000 !important;
+        border-width: 3px !important;
+      }
+      .neutral {
+        border: solid #0000ff !important;
+        border-width: 3px !important;
+      }
   body
     .ui.light.blue.inverted.menu
       .ui.container
         .ui.inverted.secondary.menu
-          h1(style='color:white;') IoT Map Project
+          a.item(href='/home', style='font-weight: bolder; font-size: 20px') Home
+          a.item(href='/admin', style='font-weight: bolder; font-size: 20px') Admin
+        .right.menu
+          a.item.right(href='/logout', style='font-weight: bolder; font-size: 20px') Logout
     .ui.grid.container
-      .row
-        #map(style='height:800px;width:100%;')
-
-  script(type='text/javascript', src='/javascripts/main.js')
-  script(type='text/javascript', src='/javascripts/maphandler.js')
-  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDO5J6k4QPBpiLA_ppZCQkEEV5dlDAg47k')
+      block content

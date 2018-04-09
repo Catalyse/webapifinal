@@ -1,10 +1,10 @@
 //User Modal Functions ----------------------------------------------------------------------------------------------
+var userEditMode = false;
 $(function(){
   $("#adduser").click(function(){
     $(".adduser").modal('show').modal('refresh');
-    document.getElementById('userEditMode').value = 'false';
     document.getElementById("usermodalheader").innerHTML = "Add User";
-    document.getElementById("deleteuserbutton").className = "ui disabled negative labeled icon button"
+    userEditMode = false;
     document.getElementById('userform').reset();
     document.getElementById('userform').className = "ui form";
   });
@@ -21,8 +21,7 @@ function EditUser(uid) {
   $(".adduser").modal({closable: true}).modal('show').modal('refresh');
   document.getElementById("usermodalheader").innerHTML = "Edit User";
   document.getElementById("userIDField").value = uid;
-  document.getElementById('userEditMode').value = 'true';
-  document.getElementById("deleteuserbutton").className = "ui negative labeled icon button"
+  userEditMode = true;
   var userform = document.getElementById('userform');
   userform.className = "ui loading form";
 
@@ -67,68 +66,13 @@ function EditUser(uid) {
   return false;
 }
 
-function DeleteUser(uid){
-  $(".adduser").modal('hide');
-  $(".warningprompt").modal({closable: true}).modal('show').modal('refresh');
-  document.getElementById('warningheader').innerHTML = "Warning: Deleting User!";
-  document.getElementById('warningprompttext').innerHTML = "Are you sure you want to delete this user?  This action is irreversable."
-  document.getElementById('warningbuttoncancel').onclick = function() {
-    $(".warningprompt").modal('hide');
-    $(".adduser").modal({closable: true}).modal('show').modal('refresh');
-  }
-  document.getElementById('warningbuttonsubmit').onclick = function() {
-    document.getElementById('warningbuttonsubmit').className = "ui loading negative right labeled icon button";
-    var postdata = "id=" + uid;
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if(this.readyState == 4 && this.status == 200) {
-        if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
-          LogoutRedirect();
-        }
-        if(this.responseText.indexOf("$$UNAUTH$$") !== -1){
-          $(".unauthprompt").modal('show').modal('refresh');
-        }
-        else if(this.responseText == "1") {
-          document.getElementById('warningbuttonsubmit').className = "ui negative right labeled icon button";
-          $(".warningprompt").modal('hide');
-          $(".adduser").modal('hide');
-          $(".successprompt").modal('show');
-          ReloadUserList();
-          document.getElementById('successprompttext').innerHTML = "User Successfully Deleted!";
-          setTimeout(function() {
-            $(".successprompt").modal('hide');                
-          }, 1000);
-        }
-        else {
-          $(".warningprompt").modal('hide');          
-          document.getElementById('warningbuttonsubmit').className = "ui negative right labeled icon button";
-          document.getElementById('warningbuttonsubmit').innerHTML = "Okay";
-          document.getElementById('warningheader').innerHTML = "Error!";
-          document.getElementById('warningprompttext').innerHTML = this.responseText; 
-          $(".warningprompt").modal('show');          
-          document.getElementById('warningbuttonsubmit').onclick = function() {
-            document.getElementById('warningbuttonsubmit').innerHTML = "Delete<i class=\"cancel icon\"></i>";
-            $(".warningprompt").modal('hide');
-            $(".adduser").modal({closable: true}).modal('show').modal('refresh');
-          }
-        }
-      }
-    }
-    xhttp.open("POST", "/admin/r/user/delete", true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(postdata);
-    return false;
-  }
-  return false;
-}
-
 $(function(){
   $("#usersubmit").click(function() {
     var userform = document.getElementById('userform');
     userform.className = "ui loading form";
     if(ValidateUserForm()){
-      if(document.getElementById('userEditMode').value == 'false') {
-        var postdata = "fname=" + userform.elements["fname"].value + "&lname=" + userform.elements["lname"].value + "&username=" + userform.elements["username"].value + "&password=" + userform.elements["password"].value + "&email=" + userform.elements["email"].value + "&permid=" + userform.elements["permid"].value + "&linkeddriver=" + userform.elements["linkeddriver"].value;
+      if(!userEditMode) {
+        var postdata = "name=" + userform.elements["name"].value + "&username=" + userform.elements["username"].value + "&password=" + userform.elements["password"].value;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if(this.readyState == 4 && this.status == 200) {
@@ -161,10 +105,10 @@ $(function(){
       }
       else {
         if(userform.elements["password"].value == '') {
-          var postdata = "uid=" + document.getElementById("userIDField").value + "&editpassword=false&fname=" + userform.elements["fname"].value + "&lname=" + userform.elements["lname"].value + "&username=" + userform.elements["username"].value + "&email=" + userform.elements["email"].value + "&permid=" + userform.elements["permid"].value + "&linkeddriver=" +  userform.elements["linkeddriver"].value;
+          var postdata = "uid=" + document.getElementById("userIDField").value + "&editpassword=false&name=" + userform.elements["name"].value + "&username=" + userform.elements["username"].value;
         }
         else {
-          var postdata = "uid=" + document.getElementById("userIDField").value + "&editpassword=true&fname=" + userform.elements["fname"].value + "&lname=" + userform.elements["lname"].value + "&username=" + userform.elements["username"].value + "&password=" + userform.elements["password"].value + "&email=" + userform.elements["email"].value + "&permid=" + userform.elements["permid"].value + "&linkeddriver=" +  userform.elements["linkeddriver"].value;        
+          var postdata = "uid=" + document.getElementById("userIDField").value + "&editpassword=true&name=" + userform.elements["name"].value + "&username=" + userform.elements["username"].value + "&password=" + userform.elements["password"].value;
         }
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
