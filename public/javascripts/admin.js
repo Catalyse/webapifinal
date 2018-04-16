@@ -237,15 +237,11 @@ function EditCategory(id) {
   var categoryform = document.getElementById('categoryform');
   categoryform.className = "ui loading form";
 
-  var postdata = "id=" + id;
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
       if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
         LogoutRedirect();
-      }
-      if(this.responseText.indexOf("$$UNAUTH$$") !== -1){
-        $(".unauthprompt").modal('show').modal('refresh');
       }
       else if(this.responseText == "-1") {
         categoryform.className = "ui form error";
@@ -254,17 +250,17 @@ function EditCategory(id) {
       else {
         categoryform.className = "ui form";
         var category = JSON.parse(this.responseText);
-        categoryform.elements["categoryname"].value = category[0].name;
-        categoryform.elements["categorydescription"].value = category[0].description;
+        categoryform.elements["categoryname"].value = category.name;
+        categoryform.elements["categorydescription"].value = category.description;
         document.getElementById('deletecategorybutton').onclick = function() {
           Deletecategory(uid);
         }
       }
     }
   }
-  xhttp.open("POST", "/r/category/", true);
+  xhttp.open("GET", "/r/category/" + id, true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send(postdata);
+  xhttp.send();
   return false;
 }
 
@@ -438,7 +434,6 @@ function EditProduct(id) {
   var productform = document.getElementById('productform');
   productform.className = "ui loading form";
 
-  var postdata = "id=" + id;
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
@@ -452,19 +447,20 @@ function EditProduct(id) {
       else {
         productform.className = "ui form";
         var product = JSON.parse(this.responseText);
-        productform.elements["productname"].value = product[0].name;
-        productform.elements["productdescription"].value = product[0].description;
-        productform.elements["productcost"].value = product[0].cost;
-        productform.elements["productquantity"].value = product[0].quantity;
+        productform.elements["productname"].value = product.name;
+        productform.elements["productdescription"].value = product.description;
+        productform.elements["productcost"].value = product.cost;
+        productform.elements["productquantity"].value = product.quantity;
+        productform.elements["productcategory"].value = product.category;
         document.getElementById('deleteproductbutton').onclick = function() {
           DeleteProduct(id);
         }
       }
     }
   }
-  xhttp.open("POST", "/r/product/", true);
+  xhttp.open("GET", "/r/product/" + id, true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send(postdata);
+  xhttp.send();
   return false;
 }
 
@@ -629,7 +625,7 @@ function CloseCharityModal() {
   $(".addcharity").modal('hide');
 }
 
-function Editcharity(id) {
+function EditCharity(id) {
   $(".addcharity").modal({closable: true}).modal('show').modal('refresh');
   document.getElementById('deletecharitybutton').classList.remove('disabled');
   document.getElementById("charitymodalheader").innerHTML = "Edit Charity";
@@ -638,7 +634,6 @@ function Editcharity(id) {
   var charityform = document.getElementById('charityform');
   charityform.className = "ui loading form";
 
-  var postdata = "id=" + id;
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
@@ -652,17 +647,17 @@ function Editcharity(id) {
       else {
         charityform.className = "ui form";
         var charity = JSON.parse(this.responseText);
-        charityform.elements["charityname"].value = charity[0].name;
-        charityform.elements["charitydescription"].value = charity[0].description;
+        charityform.elements["charityname"].value = charity.name;
+        charityform.elements["charitydescription"].value = charity.description;
         document.getElementById('deletecharitybutton').onclick = function() {
           DeleteCharity(id);
         }
       }
     }
   }
-  xhttp.open("POST", "/r/charity/", true);
+  xhttp.open("GET", "/r/charity/" + id, true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send(postdata);
+  xhttp.send();
   return false;
 }
 
