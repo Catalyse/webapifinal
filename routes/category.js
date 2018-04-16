@@ -106,12 +106,13 @@ router.get('/:id', function(req, res) {
   });
 });
 
-router.get('/all', function(req, res) {
+//This is a post because it conflicts with the above get function
+router.post('/all', function(req, res) {
   general.PostTokenCheck(req, res, "category/all", "GET", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `category` WHERE id = " + req.params.id, function(error,result) {
+      general.pool.query("SELECT * FROM `category`;", function(error,result) {
         if(error) {
-          res.send("There was an error making the query! :: " + error.message);
+          res.send("Error: There was an error making the query! :: " + error.message);
         }
         else {
           if(result.length > 0) {
@@ -128,4 +129,5 @@ router.get('/all', function(req, res) {
     }
   });
 });
+
 module.exports = router;

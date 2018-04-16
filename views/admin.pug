@@ -142,13 +142,13 @@ block content
         label Description
         input(placeholder='Enter Description', name='productdescription', type='text')
       .two.fields
-        .field
+        .field(id='productquantityfield')
           label Quantity
           input(placeholder='Enter Quantity', name='productquantity', type='number')
-        .field
+        .field(id='productcostfield')
           label Cost
           input(placeholder='Enter Cost', name='productcost', type='number')
-      .field
+      .field(id='productcategoryfield')
         label Product Category
         select.ui.fluid.search.dropdown(name='productcategory', id='productcategory')
           option(value='') Choose Category

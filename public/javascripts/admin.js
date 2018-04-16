@@ -1,3 +1,10 @@
+//Init
+$(function() {
+  ReloadCategoryList();
+  ReloadCharityList();
+  ReloadProductList();
+});
+
 //User Modal Functions ----------------------------------------------------------------------------------------------
 var userEditMode = false;
 $(function(){
@@ -33,9 +40,6 @@ function EditUser(uid) {
     if(this.readyState == 4 && this.status == 200) {
       if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
         LogoutRedirect();
-      }
-      if(this.responseText.indexOf("$$UNAUTH$$") !== -1){
-        $(".unauthprompt").modal('show').modal('refresh');
       }
       else if(this.responseText == "-1") {
         userform.className = "ui form error";
@@ -124,8 +128,8 @@ function DeleteUser(uid){
 $(function(){
   $("#usersubmit").click(function() {
     var userform = document.getElementById('userform');
-    userform.className = "ui loading form";
     if(ValidateUserForm()){
+      userform.className = "ui loading form";
       if(!userEditMode) {
         var postdata = "name=" + userform.elements["name"].value + "&username=" + userform.elements["username"].value + "&password=" + userform.elements["password"].value;
         var xhttp = new XMLHttpRequest();
@@ -330,10 +334,10 @@ function DeleteCategory(id){
 $(function(){
   $("#categorysubmit").click(function() {
     var categoryform = document.getElementById('categoryform');
-    categoryform.className = "ui loading form";
     if(ValidateCategoryForm()){
+      categoryform.className = "ui loading form";
       if(!categoryEditMode) {
-        var postdata = "categoryname=" + categoryform.elements["categoryname"].value + "&description=" + categoryform.elements["categorydescription"].value;
+        var postdata = "name=" + categoryform.elements["categoryname"].value + "&description=" + categoryform.elements["categorydescription"].value;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if(this.readyState == 4 && this.status == 200) {
@@ -347,8 +351,8 @@ $(function(){
               categoryform.className = "ui form";
               categoryform.reset();
                 $(".successprompt").modal('show');
-                ReloadcategoryList();
-                document.getElementById('successprompttext').innerHTML = "category Successfully Added!";
+                ReloadCategoryList();
+                document.getElementById('successprompttext').innerHTML = "Category Successfully Added!";
                 setTimeout(function() {
                   $(".successprompt").modal('hide');                
                 }, 2000);
@@ -425,24 +429,21 @@ function CloseProductModal() {
   $(".addproduct").modal('hide');
 }
 
-function EditProduct(uid) {
+function EditProduct(id) {
   $(".addproduct").modal({closable: true}).modal('show').modal('refresh');
   document.getElementById('deleteproductbutton').classList.remove('disabled');
   document.getElementById("productmodalheader").innerHTML = "Edit Product";
-  document.getElementById("productIDField").value = uid;
+  document.getElementById("productIDField").value = id;
   productEditMode = true;
   var productform = document.getElementById('productform');
   productform.className = "ui loading form";
 
-  var postdata = "uid=" + uid;
+  var postdata = "id=" + id;
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if(this.readyState == 4 && this.status == 200) {
       if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
         LogoutRedirect();
-      }
-      if(this.responseText.indexOf("$$UNAUTH$$") !== -1){
-        $(".unauthprompt").modal('show').modal('refresh');
       }
       else if(this.responseText == "-1") {
         productform.className = "ui form error";
@@ -451,10 +452,12 @@ function EditProduct(uid) {
       else {
         productform.className = "ui form";
         var product = JSON.parse(this.responseText);
-        productform.elements["name"].value = product[0].name;
-        productform.elements["productname"].value = product[0].productname;
+        productform.elements["productname"].value = product[0].name;
+        productform.elements["productdescription"].value = product[0].description;
+        productform.elements["productcost"].value = product[0].cost;
+        productform.elements["productquantity"].value = product[0].quantity;
         document.getElementById('deleteproductbutton').onclick = function() {
-          Deleteproduct(uid);
+          DeleteProduct(id);
         }
       }
     }
@@ -465,10 +468,10 @@ function EditProduct(uid) {
   return false;
 }
 
-function Deleteproduct(uid){
+function DeleteProduct(id){
   $(".addproduct").modal('hide');
   $(".warningprompt").modal({closable: true}).modal('show').modal('refresh');
-  document.getElementById('warningheader').innerHTML = "Warning: Deleting product!";
+  document.getElementById('warningheader').innerHTML = "Warning: Deleting Product!";
   document.getElementById('warningprompttext').innerHTML = "Are you sure you want to delete this product?  This action is irreversable."
   document.getElementById('warningbuttoncancel').onclick = function() {
     $(".warningprompt").modal('hide');
@@ -476,7 +479,7 @@ function Deleteproduct(uid){
   }
   document.getElementById('warningbuttonsubmit').onclick = function() {
     document.getElementById('warningbuttonsubmit').className = "ui loading negative right labeled icon button";
-    var postdata = "id=" + uid;
+    var postdata = "id=" + id;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if(this.readyState == 4 && this.status == 200) {
@@ -489,7 +492,7 @@ function Deleteproduct(uid){
           $(".addproduct").modal('hide');
           $(".successprompt").modal('show');
           ReloadproductList();
-          document.getElementById('successprompttext').innerHTML = "product Successfully Deleted!";
+          document.getElementById('successprompttext').innerHTML = "Product Successfully Deleted!";
           setTimeout(function() {
             $(".successprompt").modal('hide');                
           }, 1000);
@@ -531,10 +534,10 @@ function Deleteproduct(uid){
 $(function(){
   $("#productsubmit").click(function() {
     var productform = document.getElementById('productform');
-    productform.className = "ui loading form";
-    if(ValidateproductForm()){
+    if(ValidateProductForm()){
+      productform.className = "ui loading form";
       if(!productEditMode) {
-        var postdata = "name=" + productform.elements["name"].value + "&productname=" + productform.elements["productname"].value + "&password=" + productform.elements["password"].value;
+        var postdata = "name=" + productform.elements["productname"].value + "&description=" + productform.elements["productdescription"].value + "&cost=" + productform.elements["productcost"].value + "&quantity=" + productform.elements["productquantity"].value + "&category="  + productform.elements["productcategory"].value;;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if(this.readyState == 4 && this.status == 200) {
@@ -548,8 +551,8 @@ $(function(){
               productform.className = "ui form";
               productform.reset();
                 $(".successprompt").modal('show');
-                ReloadproductList();
-                document.getElementById('successprompttext').innerHTML = "product Successfully Added!";
+                ReloadProductList();
+                document.getElementById('successprompttext').innerHTML = "Product Successfully Added!";
                 setTimeout(function() {
                   $(".successprompt").modal('hide');                
                 }, 2000);
@@ -566,12 +569,7 @@ $(function(){
         return false;
       }
       else {
-        if(productform.elements["password"].value == '') {
-          var postdata = "uid=" + document.getElementById("productIDField").value + "&editpassword=false&name=" + productform.elements["name"].value + "&productname=" + productform.elements["productname"].value;
-        }
-        else {
-          var postdata = "uid=" + document.getElementById("productIDField").value + "&editpassword=true&name=" + productform.elements["name"].value + "&productname=" + productform.elements["productname"].value + "&password=" + productform.elements["password"].value;
-        }
+        var postdata = "id=" + document.getElementById("productIDField").value + "&name=" + productform.elements["productname"].value + "&description=" + productform.elements["productdescription"].value + "&cost=" + productform.elements["productcost"].value + "&quantity=" + productform.elements["productquantity"].value + "&category="  + productform.elements["productcategory"].value;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if(this.readyState == 4 && this.status == 200) {
@@ -587,7 +585,7 @@ $(function(){
               $(".addproduct").modal('hide');
               $(".successprompt").modal('show');
               ReloadproductList();
-              document.getElementById('successprompttext').innerHTML = "product Successfully Edited!";
+              document.getElementById('successprompttext').innerHTML = "Product Successfully Edited!";
               setTimeout(function() {
                 $(".successprompt").modal('hide');                
               }, 1000);
@@ -611,6 +609,198 @@ $(function(){
 });
 //End product Modal Functions ----------------------------------------------------------------------------------------------
 
+//Charity Modal Functions ----------------------------------------------------------------------------------------------
+var charityEditMode = false;
+$(function(){
+  $("#addcharity").click(function(){
+    $(".addcharity").modal('show').modal('refresh');
+    document.getElementById("charitymodalheader").innerHTML = "Add Charity";
+    document.getElementById('deletecharitybutton').classList.add('disabled');
+    charityEditMode = false;
+    document.getElementById('charityform').reset();
+    document.getElementById('charityform').className = "ui form";
+  });
+  $(".addcharity").modal({
+    closable: true
+  });
+});
+
+function CloseCharityModal() {
+  $(".addcharity").modal('hide');
+}
+
+function Editcharity(id) {
+  $(".addcharity").modal({closable: true}).modal('show').modal('refresh');
+  document.getElementById('deletecharitybutton').classList.remove('disabled');
+  document.getElementById("charitymodalheader").innerHTML = "Edit Charity";
+  document.getElementById("charityIDField").value = id;
+  charityEditMode = true;
+  var charityform = document.getElementById('charityform');
+  charityform.className = "ui loading form";
+
+  var postdata = "id=" + id;
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+        LogoutRedirect();
+      }
+      else if(this.responseText == "-1") {
+        charityform.className = "ui form error";
+        document.getElementById("charityformerrormsg").innerHTML = this.responseText;
+      }
+      else {
+        charityform.className = "ui form";
+        var charity = JSON.parse(this.responseText);
+        charityform.elements["charityname"].value = charity[0].name;
+        charityform.elements["charitydescription"].value = charity[0].description;
+        document.getElementById('deletecharitybutton').onclick = function() {
+          DeleteCharity(id);
+        }
+      }
+    }
+  }
+  xhttp.open("POST", "/r/charity/", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send(postdata);
+  return false;
+}
+
+function DeleteCharity(id){
+  $(".addcharity").modal('hide');
+  $(".warningprompt").modal({closable: true}).modal('show').modal('refresh');
+  document.getElementById('warningheader').innerHTML = "Warning: Deleting Charity!";
+  document.getElementById('warningprompttext').innerHTML = "Are you sure you want to delete this charity?  This action is irreversable."
+  document.getElementById('warningbuttoncancel').onclick = function() {
+    $(".warningprompt").modal('hide');
+    $(".addcharity").modal({closable: true}).modal('show').modal('refresh');
+  }
+  document.getElementById('warningbuttonsubmit').onclick = function() {
+    document.getElementById('warningbuttonsubmit').className = "ui loading negative right labeled icon button";
+    var postdata = "id=" + id;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200) {
+        if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+          LogoutRedirect();
+        }
+        else if(this.responseText == "1") {
+          document.getElementById('warningbuttonsubmit').className = "ui negative right labeled icon button";
+          $(".warningprompt").modal('hide');
+          $(".addcharity").modal('hide');
+          $(".successprompt").modal('show');
+          ReloadCharityList();
+          document.getElementById('successprompttext').innerHTML = "Charity Successfully Deleted!";
+          setTimeout(function() {
+            $(".successprompt").modal('hide');                
+          }, 1000);
+        }
+        else {
+          $(".warningprompt").modal('hide');          
+          document.getElementById('warningbuttonsubmit').className = "ui negative right labeled icon button";
+          document.getElementById('warningbuttonsubmit').innerHTML = "Okay";
+          document.getElementById('warningheader').innerHTML = "Error!";
+          document.getElementById('warningprompttext').innerHTML = this.responseText; 
+          $(".warningprompt").modal('show');          
+          document.getElementById('warningbuttonsubmit').onclick = function() {
+            document.getElementById('warningbuttonsubmit').innerHTML = "Delete<i class=\"cancel icon\"></i>";
+            $(".warningprompt").modal('hide');
+            $(".addcharity").modal({closable: true}).modal('show').modal('refresh');
+          }
+        }
+      }
+      if(this.readyState == 4 && this.status != 200) {
+        $(".successprompt").modal('show');
+        document.getElementById('successpromptheader').innerHTML = "Error!";
+        document.getElementById('successpromptmessagebody').className = "ui error message";
+        document.getElementById('successprompttext').innerHTML = "Server Error! Please Try Again";
+        setTimeout(function() {
+          document.getElementById('successpromptheader').innerHTML = "Success";
+          document.getElementById('successpromptmessagebody').className = "ui success message";
+          $(".successprompt").modal('hide');                
+        }, 2000);
+      }
+    }
+    xhttp.open("POST", "/r/charity/delete", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(postdata);
+    return false;
+  }
+  return false;
+}
+
+$(function(){
+  $("#charitysubmit").click(function() {
+    var charityform = document.getElementById('charityform');
+    if(ValidateCharityForm()){
+      charityform.className = "ui loading form";
+      if(!charityEditMode) {
+        var postdata = "name=" + charityform.elements["charityname"].value + "&description=" + charityform.elements["charitydescription"].value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if(this.readyState == 4 && this.status == 200) {
+            if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+              LogoutRedirect();
+            }
+            else if(this.responseText == "1") {
+              charityform.className = "ui form";
+              charityform.reset();
+                $(".successprompt").modal('show');
+                ReloadCharityList();
+                document.getElementById('successprompttext').innerHTML = "Charity Successfully Added!";
+                setTimeout(function() {
+                  $(".successprompt").modal('hide');                
+                }, 2000);
+            }
+            else {
+              charityform.className = "ui form error";
+              document.getElementById("charityformerrormsg").innerHTML = this.responseText;
+            }
+          }
+        }
+        xhttp.open("POST", "/r/charity/add", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(postdata);
+        return false;
+      }
+      else {
+        var postdata = "id=" + document.getElementById("charityIDField").value + "&name=" + charityform.elements["charityname"].value + "&description=" + charityform.elements["charitydescription"].value;        
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if(this.readyState == 4 && this.status == 200) {
+            if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+              LogoutRedirect();
+            }
+            else if(this.responseText == "1") {
+              charityform.className = "ui form";
+              charityform.reset();
+              $(".addcharity").modal('hide');
+              $(".successprompt").modal('show');
+              ReloadcharityList();
+              document.getElementById('successprompttext').innerHTML = "Charity Successfully Edited!";
+              setTimeout(function() {
+                $(".successprompt").modal('hide');                
+              }, 1000);
+            }
+            else {
+              charityform.className = "ui form error";
+              document.getElementById("charityformerrormsg").innerHTML = this.responseText;
+            }
+          }
+        }
+        xhttp.open("POST", "/r/charity/edit", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send(postdata);
+        return false;
+      }
+    }
+    else {
+      return false;
+    }
+  });
+});
+//End Charity Modal Functions ----------------------------------------------------------------------------------------------
+
 //List Reloading Functions ----------------------------------------------------------------------------------------------
 function ReloadUserList() {
   var userTable = document.getElementById('usertable');
@@ -621,9 +811,6 @@ function ReloadUserList() {
       if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
         LogoutRedirect();
       }
-      if(this.responseText.indexOf("$$UNAUTH$$") !== -1){
-        $(".unauthprompt").modal('show').modal('refresh');
-      }
       else if(this.responseText.indexOf("Error") === -1) {
         var userList = JSON.parse(this.responseText);
         for(i = 0; i < userList.length; i++)
@@ -631,12 +818,12 @@ function ReloadUserList() {
           newtable += "<tr onclick='EditUser(" + userList[i].id + ")' class='title'>";
           newtable += "<td style='width:33%'>" + userList[i].username + "</td>";
           newtable += "<td style='width:33%'>" + userList[i].name + "</td>";
-          newtable += "<td style='width:33%'>" + userList[i].donated + "</tr>";
+          newtable += "<td style='width:33%'>" + userList[i].donated + "</td></tr>";
         }
         userTable.innerHTML = newtable;
       }
       else {
-
+        alert("ERROR: " + this.responseText);
       }
     }
   }
@@ -645,6 +832,172 @@ function ReloadUserList() {
   xhttp.send();
 }
 
+function ReloadCategoryList() {
+  var categoryTable = document.getElementById('categorytable');
+  var newtable = '';
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      ReloadCategoryListDropdown();
+      if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+        LogoutRedirect();
+      }
+      if(this.responseText.indexOf("$$NORESULT$$") !== -1){
+        categoryTable.innerHTML = "<p style='margin-top:10px;margin-bottom:10px;text-align:center;'>No categories found!</p>";
+      }
+      else if(this.responseText.indexOf("Error") === -1) {
+        var categoryList = JSON.parse(this.responseText);
+        for(i = 0; i < categoryList.length; i++)
+        {
+          newtable += "<tr onclick='EditCategory(" + categoryList[i].id + ")' class='title'>";
+          newtable += "<td style='width:33%'>" + categoryList[i].id + "</td>";
+          newtable += "<td style='width:33%'>" + categoryList[i].name + "</td>";
+          newtable += "<td style='width:33%'>" + categoryList[i].description + "</td></tr>";
+        }
+        categoryTable.innerHTML = newtable;
+      }
+      else {
+        alert("ERROR: " + this.responseText);
+      }
+    }
+  }
+  xhttp.open("POST", "/r/category/all", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send();
+}
+
+function ReloadProductList() {
+  var productTable = document.getElementById('producttable');
+  var newtable = '';
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+        LogoutRedirect();
+      }
+      if(this.responseText.indexOf("$$NORESULT$$") !== -1){
+        productTable.innerHTML = "<p style='margin-top:10px;margin-bottom:10px;text-align:center;'>No products found!</p>";
+      }
+      else if(this.responseText.indexOf("Error") === -1) {
+        var productList = JSON.parse(this.responseText);
+        xhttp.onreadystatechange = function() {
+          if(this.readyState == 4 && this.status == 200) {
+            if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+              LogoutRedirect();
+            }
+            else if(this.responseText.indexOf("Error") === -1) {
+              var categoryList = JSON.parse(this.responseText);
+              for(i = 0; i < productList.length; i++)
+              {
+                newtable += "<tr onclick='EditProduct(" + productList[i].id + ")' class='title'>";
+                newtable += "<td style='width:20%'>" + productList[i].name + "</td>";
+                newtable += "<td style='width:20%'>" + productList[i].description + "</td>";
+                newtable += "<td style='width:20%'>" + productList[i].cost + "</td>";
+                newtable += "<td style='width:20%'>" + productList[i].quantity + "</td>";
+                var foundCategory = false;
+                for(j = 0; j < categoryList.length; j++) {
+                  if(categoryList[j].id == productList[i].category) {
+                    foundCategory = true;
+                    newtable += "<td style='width:20%'>" + categoryList[j].name + "</td></tr>";
+                    break;
+                  }
+                }
+                if(!foundCategory) {
+                  newtable += "<td style='width:20%'>Category Lookup Failure</td></tr>";                  
+                }
+              }
+              productTable.innerHTML = newtable;
+            }
+            else {
+              alert("ERROR: " + this.responseText);
+            }
+          }
+        }
+        xhttp.open("POST", "/r/category/all", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send();
+      }
+      else {
+        alert("ERROR: " + this.responseText);
+      }
+    }
+  }
+  xhttp.open("POST", "/r/product/all", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send();
+}
+
+function ReloadCharityList() {
+  var charityTable = document.getElementById('charitytable');
+  var newtable = '';
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+        LogoutRedirect();
+      }
+      if(this.responseText.indexOf("$$NORESULT$$") !== -1){
+        charityTable.innerHTML = "<p style='margin-top:10px;margin-bottom:10px;text-align:center;'>No charities found!</p>";
+      }
+      else if(this.responseText.indexOf("Error") === -1) {
+        var charityList = JSON.parse(this.responseText);
+        for(i = 0; i < charityList.length; i++)
+        {
+          newtable += "<tr onclick='EditCharity(" + charityList[i].id + ")' class='title'>";
+          newtable += "<td style='width:33%'>" + charityList[i].name + "</td>";
+          newtable += "<td style='width:33%'>" + charityList[i].description + "</td>";
+          newtable += "<td style='width:33%'>" + charityList[i].donated + "</td></tr>";
+        }
+        charityTable.innerHTML = newtable;
+      }
+      else {
+        alert("ERROR: " + this.responseText);
+      }
+    }
+  }
+  xhttp.open("POST", "/r/charity/all", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send();
+}
+
+function ReloadCategoryListDropdown() {
+  var newDropdown = '';
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+      if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+        LogoutRedirect();
+      }
+      else if(this.responseText.indexOf("Error") === -1) {
+        var categoryList = JSON.parse(this.responseText);
+        newDropdown += "<option value=''>Choose Category</option>"
+        for(i = 0; i < categoryList.length; i++)
+        {
+          newDropdown += "<option value='" + categoryList[i].id + "'>" + categoryList[i].name + "</option>"
+        }
+        document.getElementById('productcategory').innerHTML = newDropdown;
+      }
+      else {
+        alert("Error: " + this.responseText);
+      }
+    }
+    if(this.readyState == 4 && this.status != 200) {
+      $(".successprompt").modal('show');
+      document.getElementById('successpromptheader').innerHTML = "Error!";
+      document.getElementById('successpromptmessagebody').className = "ui error message";
+      document.getElementById('successprompttext').innerHTML = "Server Error! Please Try Again";
+      setTimeout(function() {
+        document.getElementById('successpromptheader').innerHTML = "Success";
+        document.getElementById('successpromptmessagebody').className = "ui success message";
+        $(".successprompt").modal('hide');                
+      }, 2000);
+    }
+  }
+  xhttp.open("POST", "/r/category/all", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send();
+}
+
 function LogoutRedirect() {
-  window.location.href = "/?redirect=true&from=/admin";
+  window.location.href = "/";
 }

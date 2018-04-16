@@ -109,10 +109,11 @@ router.get('/:id', function(req, res) {
   });
 });
 
-router.get('/all', function(req, res) {
+//This is a post because it conflicts with the above get function
+router.post('/all', function(req, res) {
   general.PostTokenCheck(req, res, "product/all", "GET", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `product` WHERE id = " + req.params.id, function(error,result) {
+      general.pool.query("SELECT * FROM `product`;", function(error,result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }

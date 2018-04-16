@@ -94,166 +94,151 @@ function ValidateUserForm() {
 }
 //End User Modal Functions ----------------------------------------------------------------------------------------------
 
-//Driver Modal Functions ----------------------------------------------------------------------------------------------
-function ValidateDriverForm(){
-  var driverform = document.getElementById('driverform');
+//Category Modal Functions ----------------------------------------------------------------------------------------------
+function ValidateCategoryForm() {
+  var categoryform = document.getElementById('categoryform');
   var valid = true;
   var errorcontent = '';
 
-  if(driverform.elements['fname'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>First Name Cannot Be Empty!</p>"
-      document.getElementById('drivfnamebox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>First Name Cannot Be Empty!</p>"
-      document.getElementById('drivfnamebox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivfnamebox').className = "field";
+  if(categoryform.elements['categoryname'].value == '') {
+    valid = false;
+    errorcontent = "<p>Name Cannot Be Empty!</p>"
+    document.getElementById('categorynamefield').classList.add("error");
+  } 
+  else {
+    document.getElementById('categorynamefield').classList.remove("error")
   } 
 
-  if(driverform.elements['lname'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>Last Name Cannot Be Empty!</p>"
-      document.getElementById('drivlnamebox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>Last Name Cannot Be Empty!</p>"
-      document.getElementById('drivlnamebox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivlnamebox').className = "field";
+  if(categoryform.elements['categorydescription'].value == '') {
+    valid = false;
+    errorcontent += "<p>Description Cannot Be Empty!</p>"
+    document.getElementById('categorydescriptionfield').classList.add("error");
   } 
-
-  if(driverform.elements['phonenumber'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>Phone Number Cannot Be Empty!</p>"
-      document.getElementById('drivphonebox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>Phone Number Cannot Be Empty!</p>"
-      document.getElementById('drivphonebox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivphonebox').className = "field";
+  else {
+    document.getElementById('categorydescriptionfield').classList.remove("error")
   } 
-
-  if(driverform.elements['licenseno'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>License Number Cannot Be Empty!</p>"
-      document.getElementById('drivlicensebox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>License Number Cannot Be Empty!</p>"
-      document.getElementById('drivlicensebox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivlicensebox').className = "field";
-  } 
-
-  if(driverform.elements['driverpaypercent'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>Paypercent Cannot Be Empty!</p>"
-      document.getElementById('drivpercentbox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>Paypercent Cannot Be Empty!</p>"
-      document.getElementById('drivpercentbox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivpercentbox').className = "field";
-  } 
-
-  if(driverform.elements['street'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>Street Cannot Be Empty!</p>"
-      document.getElementById('drivstreetbox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>Street Cannot Be Empty!</p>"
-      document.getElementById('drivstreetbox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivstreetbox').className = "field";
-  } 
-
-  if(driverform.elements['city'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>City Cannot Be Empty!</p>"
-      document.getElementById('drivcitybox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>City Cannot Be Empty!</p>"
-      document.getElementById('drivcitybox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivcitybox').className = "field";
-  } 
-
-  if(driverform.elements['state'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>State Cannot Be Empty!</p>"
-      document.getElementById('drivstatebox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>State Cannot Be Empty!</p>"
-      document.getElementById('drivstatebox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivstatebox').className = "field";
-  } 
-
-  if(driverform.elements['zip'].value == '') {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>Zip Cannot Be Empty!</p>"
-      document.getElementById('drivzipbox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>Zip Cannot Be Empty!</p>"
-      document.getElementById('drivzipbox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivzipbox').className = "field";
-  }
   
-  if(driverform.elements['zip'].value > 99999) {
-    if(valid) {
-      driverform.className = "ui form error";
-      valid = false;
-      errorcontent = "<p>Zip is Too Long</p>"
-      document.getElementById('drivzipbox').className = "field error";
-    }
-    else {
-      errorcontent += "<p>Zip is Too Long</p>"
-      document.getElementById('drivzipbox').className = "field error";
-    }
-  } else{
-    document.getElementById('drivzipbox').className = "field";
-  }
-
   if(!valid) {
-    document.getElementById('driverformerrormsg').innerHTML = errorcontent;
-    $(".adddriver").modal('refresh');
+    categoryform.classList.add("error");
+    document.getElementById('categoryformerrormsg').innerHTML = errorcontent;
+    $(".addcategory").modal('refresh');
+  }
+  else {
+    categoryform.classList.remove("error");
   }
   return valid;
 }
-//End Driver Modal Functions ----------------------------------------------------------------------------------------------
+//End Category Modal Functions -----------------------------------------------------------------------------------------
+
+//Product Modal Functions ----------------------------------------------------------------------------------------------
+function ValidateProductForm() {
+  var productform = document.getElementById('productform');
+  var valid = true;
+  var errorcontent = '';
+
+  if(productform.elements['productname'].value == '') {
+    valid = false;
+    errorcontent = "<p>Name Cannot Be Empty!</p>"
+    document.getElementById('productnamefield').classList.add("error");
+  } 
+  else {
+    document.getElementById('productnamefield').classList.remove("error")
+  } 
+
+  if(productform.elements['productdescription'].value == '') {
+    valid = false;
+    errorcontent += "<p>Description Cannot Be Empty!</p>"
+    document.getElementById('productdescriptionfield').classList.add("error");
+  } 
+  else {
+    document.getElementById('productdescriptionfield').classList.remove("error")
+  } 
+
+  if(productform.elements['productquantity'].value == '') {
+    valid = false;
+    errorcontent += "<p>Quantity Cannot Be Empty!</p>"
+    document.getElementById('productquantityfield').classList.add("error");
+  } 
+  else {
+    if(parseFloat(productform.elements['productquantity'].value) < 0) {
+      valid = false;
+      errorcontent += "<p>Quantity Cannot Be Less Than Zero!</p>"
+      document.getElementById('productquantityfield').classList.add("error");
+    } 
+    else {
+      document.getElementById('productquantityfield').classList.remove("error")
+    }
+  } 
+
+  if(productform.elements['productcost'].value == '') {
+    valid = false;
+    errorcontent += "<p>Cost Cannot Be Empty!</p>"
+    document.getElementById('productcostfield').classList.add("error");
+  } 
+  else {
+      if(parseFloat(productform.elements['productcost'].value) < 0) {
+        valid = false;
+        errorcontent += "<p>Cost Cannot Be Less Than Zero!</p>"
+        document.getElementById('productcostfield').classList.add("error");
+      } 
+      else {
+        document.getElementById('productcostfield').classList.remove("error")
+      } 
+  }
+
+  if(productform.elements['productcategory'].value == '') {
+    valid = false;
+    errorcontent += "<p>You Must Select A Category!</p>"
+    document.getElementById('productcategoryfield').classList.add("error");
+  } 
+  else {
+    document.getElementById('productcategoryfield').classList.remove("error")
+  } 
+  
+  if(!valid) {
+    productform.classList.add("error");
+    document.getElementById('productformerrormsg').innerHTML = errorcontent;
+    $(".addproduct").modal('refresh');
+  }
+  else {
+    productform.classList.remove("error");
+  }
+  return valid;
+}
+//End Product Modal Functions ----------------------------------------------------------------------------------------------
+
+//Charity Modal Functions ----------------------------------------------------------------------------------------------
+function ValidateCharityForm() {
+  var charityform = document.getElementById('charityform');
+  var valid = true;
+  var errorcontent = '';
+
+  if(charityform.elements['charityname'].value == '') {
+    valid = false;
+    errorcontent = "<p>Name Cannot Be Empty!</p>"
+    document.getElementById('charitynamefield').classList.add("error");
+  } 
+  else {
+    document.getElementById('charitynamefield').classList.remove("error")
+  } 
+
+  if(charityform.elements['charitydescription'].value == '') {
+    valid = false;
+    errorcontent += "<p>Description Cannot Be Empty!</p>"
+    document.getElementById('charitydescriptionfield').classList.add("error");
+  } 
+  else {
+    document.getElementById('charitydescriptionfield').classList.remove("error")
+  } 
+  
+  if(!valid) {
+    charityform.classList.add("error");
+    document.getElementById('charityformerrormsg').innerHTML = errorcontent;
+    $(".addcharity").modal('refresh');
+  }
+  else {
+    charityform.classList.remove("error");
+  }
+  return valid;
+}
+//End charity Modal Functions -----------------------------------------------------------------------------------------
