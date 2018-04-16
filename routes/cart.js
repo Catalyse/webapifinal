@@ -72,7 +72,7 @@ router.post('/item/add/:id/:quantity', function(req, res) {
                         var contents = req.params.id + "%" + req.params.quantity;
                       }
                       else {
-                        var contents = contents + "$$" + req.params.id + "%" + req.params.quantity;
+                        var contents = cart.contents + "$$" + req.params.id + "%" + req.params.quantity;
                       }
                       general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(contents) + " WHERE uid = " + uid, function(error, result) {
                         if(error) {
@@ -145,10 +145,10 @@ router.post('/item/add/:id/:quantity', function(req, res) {
 
 //Contents structure:
 //ItemID%Quantity$$ItemID%Quantity$$...
-router.post('/item/remove/:id', function(req, res) {
+router.delete('/item/:id', function(req, res) {
   general.PostTokenCheck(req, res, "cart/item/add", "ADD", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `user` WHERE username = " + req.signedCookies.session.split("@")[0], function(error,result) {
+      general.pool.query("SELECT * FROM `user` WHERE username = '" + req.signedCookies.session.split("@")[0] + "';", function(error,result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }
@@ -165,8 +165,8 @@ router.post('/item/remove/:id', function(req, res) {
                 }
                 else {
                   var newContents = '';
-                  var contents = result[0].split('$$');
-                  for(i = 0; i < content.length; i++) {
+                  var contents = result[0].contents.split('$$');
+                  for(i = 0; i < contents.length; i++) {
                     if(contents[i].split("%")[0] != req.params.id) {
                       if(newContents == '') {
                         newContents = contents[i];
@@ -203,7 +203,7 @@ router.post('/item/remove/:id', function(req, res) {
 router.delete('/', function(req, res) {
   general.PostTokenCheck(req, res, "cart/delete", "DELETE/ID=", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `user` WHERE username = " + req.signedCookies.session.split("@")[0], function(error,result) {
+      general.pool.query("SELECT * FROM `user` WHERE username = '" + req.signedCookies.session.split("@")[0] + "';", function(error,result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }
@@ -238,10 +238,10 @@ router.delete('/', function(req, res) {
   });
 });
 
-router.get('/:id', function(req, res) {
+router.get('/', function(req, res) {
   general.PostTokenCheck(req, res, "product/get", "GET", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `user` WHERE username = " + req.signedCookies.session.split("@")[0], function(error,result) {
+      general.pool.query("SELECT * FROM `user` WHERE username = '" + req.signedCookies.session.split("@")[0] + "';", function(error,result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }

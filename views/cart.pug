@@ -4,10 +4,12 @@ block content
   .row
     .four.wide.compact.column
     .twelve.wide.compact.column
-      a.button.ui.primary.button(style='float:right;', id='clearcart')
+      a.button.ui.primary.button(style='float:right;', id='clearcart', onclick='ClearCart()')
         | Clear Cart
   .row(style='margin-top:0px;')
     h3(style='padding-left:10px;') Cart
+  .row(style='margin-top:0px;')
+    h5(style='padding-left:10px;') Click items to remove them from your cart.
     table.ui.small.selectable.row.celled.expandable.table(style='margin-bottom:0; border-bottom:0;')
       thead
         tr
@@ -21,15 +23,28 @@ block content
   
   .ui.modal.clearcart
     .header(id='clearcartheader')
-      | Add Product to Cart?
+      | Clear Cart?
     i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
     .ui.info.message(style='margin-left:10px;margin-right:10px;')
       p(id='clearcartprompttext') Are you sure you want to clear your cart?
     .actions
       .ui.right.labeled.button(onclick='CloseClearCartModal()')
         | Cancel
-      .ui.green.right.labeled.icon.button(id='clearcartbuttonsubmit')
+      .ui.red.right.labeled.icon.button(id='clearcartbuttonsubmit')
         | Clear Cart
+        i.check.icon
+          
+  .ui.modal.clearitem
+    .header(id='clearitemheader')
+      | Remove Product from Cart?
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.info.message(style='margin-left:10px;margin-right:10px;')
+      p(id='clearitemprompttext') Are you sure you want to remove this item from your cart?
+    .actions
+      .ui.right.labeled.button(onclick='CloseClearItemModal()')
+        | Cancel
+      .ui.red.right.labeled.icon.button(id='clearitembuttonsubmit')
+        | Remove Item
         i.check.icon
 
   .ui.modal.successprompt
