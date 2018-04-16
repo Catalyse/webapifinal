@@ -38,7 +38,7 @@ exports.TokenCheck = function(combotoken, res, reqredirect, render, redirectname
     if(err) return -1;
     if(result.length == 0) {
       if(reqredirect) {
-        res.redirect('/management/?redirect=true&from=' + redirectname);
+        res.redirect('/?redirect=true&from=' + redirectname);
       } 
       else {
         LoginRender(res, false);
@@ -62,7 +62,7 @@ exports.TokenCheck = function(combotoken, res, reqredirect, render, redirectname
         else {
           //Token expired
           if(reqredirect) {
-            res.redirect('/management/?redirect=true&from=' + redirectname);
+            res.redirect('/?redirect=true&from=' + redirectname);
           } 
           else {
             LoginRender(res, false);
@@ -72,7 +72,7 @@ exports.TokenCheck = function(combotoken, res, reqredirect, render, redirectname
       else {
         //Token does not match records.
         if(reqredirect) {
-          res.redirect('/management/?redirect=true&from=' + redirectname);
+          res.redirect('/?redirect=true&from=' + redirectname);
         } 
         else {
           LoginRender(res, false);

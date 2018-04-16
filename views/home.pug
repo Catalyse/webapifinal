@@ -2,38 +2,41 @@ extends layout
 
 block content
   .row
-    .four.wide.compact.column
-    .twelve.wide.compact.column
-      a.button.ui.primary.button(style='float:right;', id='adduser')
-        | Add User
   .row(style='margin-top:0px;')
-    h3(style='padding-left:10px;') Current Users
+    h3(style='padding-left:10px;') Current Products
     table.ui.small.selectable.row.celled.expandable.table(style='margin-bottom:0; border-bottom:0;')
       thead
         tr
-          th Username
-          th Name
-          th Donated
+          th(style='width:20%') Name
+          th(style='width:20%') Description
+          th(style='width:20%') Cost
+          th(style='width:20%') Quantity In Stock
+          th(style='width:20%') Category
     .noscrollbar(style="max-height:40vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
       table.ui.small.selectable.row.celled.expandable.table(style='border-top: 0;')
-        tbody(id='usertable')
-
-  .ui.modal.adduser
-    .header(id="usermodalheader")
-      | System User Registration
-    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
-    form.ui.form(style="margin:10px 20px 10px 20px;", method="POST", id='userform', name='userform')
-      
-      .ui.error.message
-        .header Error
-        p(id='userformerrormsg') Error!
-    .actions
-      .ui.neutral.right.labeled.button(onclick='CloseUserModal()')
-        | Cancel
-      .ui.green.right.labeled.icon.button(id='usersubmit')
-        | Submit
-        i.checkmark.icon
+        tbody(id='producttable')
   
+  .ui.modal.addproduct
+    .header(id='addproductheader')
+      | Add Product to Cart?
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.info.message(style='margin-left:10px;margin-right:10px;')
+      p(id='addproductprompttext') How many of this product do you wish to add to your cart?
+    .ui.segment
+      form.ui.form
+        .field
+          label Quantity
+          input(placeholder='Enter Quantity to Add to Cart', type='number', id='addproductquantity')
+    .ui.error.message.hidden(id='addproducterrorfield')
+      .header Must Enter Quantity!
+      p You must enter a quantity of 1 or higher to add to your cart!
+    .actions
+      .ui.right.labeled.button(onclick='CloseAddProductModal()')
+        | Cancel
+      .ui.green.right.labeled.icon.button(id='addproductbuttonsubmit')
+        | Add to Cart
+        i.check.icon
+
   .ui.modal.successprompt
     .header
       | Success
@@ -58,3 +61,5 @@ block content
       .ui.negative.right.labeled.icon.button(id='warningbuttonsubmit')
         | Delete
         i.cancel.icon
+
+  script(type='text/javascript', src='/javascripts/home.js')

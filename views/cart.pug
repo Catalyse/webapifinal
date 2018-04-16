@@ -17,20 +17,27 @@ block content
           th(style='width:25%') Quantity
     .noscrollbar(style="max-height:40vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
       table.ui.small.selectable.row.celled.expandable.table(style='border-top: 0;')
-        tbody(id='itemtable')
-          //for entry in users
-          //  tr.title()
-          //   td(style='width:25%') #{}
-          //   td(style='width:25%') #{}
-          //   td(style='width:25%') #{}
-          //   td(style='width:25%') #{}
+        tbody(id='carttable')
   
+  .ui.modal.clearcart
+    .header(id='clearcartheader')
+      | Add Product to Cart?
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.info.message(style='margin-left:10px;margin-right:10px;')
+      p(id='clearcartprompttext') Are you sure you want to clear your cart?
+    .actions
+      .ui.right.labeled.button(onclick='CloseClearCartModal()')
+        | Cancel
+      .ui.green.right.labeled.icon.button(id='clearcartbuttonsubmit')
+        | Clear Cart
+        i.check.icon
+
   .ui.modal.successprompt
     .header
       | Success
     .ui.success.message(style='margin-left:10px;margin-right:10px;')
       .header Success
-      p(id='successprompttext') User Added!
+      p(id='successprompttext') Cart Cleared
     .actions
       .ui.positive.right.labeled.icon.button
         | Okay
@@ -50,5 +57,4 @@ block content
         | Delete
         i.cancel.icon
 
-  script(type='text/javascript', src='/javascripts/admin.js')
-  script(type='text/javascript', src='/javascripts/adminvalidation.js')
+  script(type='text/javascript', src='/javascripts/cart.js')
