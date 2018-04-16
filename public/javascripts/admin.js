@@ -4,6 +4,7 @@ $(function(){
   $("#adduser").click(function(){
     $(".adduser").modal('show').modal('refresh');
     document.getElementById("usermodalheader").innerHTML = "Add User";
+    document.getElementById('deleteuserbutton').classList.add('disabled');
     userEditMode = false;
     document.getElementById('userform').reset();
     document.getElementById('userform').className = "ui form";
@@ -19,6 +20,7 @@ function CloseUserModal() {
 
 function EditUser(uid) {
   $(".adduser").modal({closable: true}).modal('show').modal('refresh');
+  document.getElementById('deleteuserbutton').classList.remove('disabled');
   document.getElementById("usermodalheader").innerHTML = "Edit User";
   document.getElementById("userIDField").value = uid;
   userEditMode = true;
@@ -42,27 +44,80 @@ function EditUser(uid) {
       else {
         userform.className = "ui form";
         var user = JSON.parse(this.responseText);
-        userform.elements["fname"].value = user[0].fname;
-        userform.elements["lname"].value = user[0].lname;
+        userform.elements["name"].value = user[0].name;
         userform.elements["username"].value = user[0].username;
-        userform.elements["email"].value = user[0].email;
-        userform.elements["permid"].value = user[0].permissionsid;
-        if(user[0].userid > 1){
-          userform.elements["linkeddriver"].value = user[0].userid;
-          document.getElementById('driverlist').className = "field";
-        }else{
-          userform.elements["linkeddriver"].value = '';
-          document.getElementById('driverlist').className = "field disabled ";
-        }
         document.getElementById('deleteuserbutton').onclick = function() {
           DeleteUser(uid);
         }
       }
     }
   }
-  xhttp.open("POST", "/admin/r/user/", true);
+  xhttp.open("POST", "/r/user/", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhttp.send(postdata);
+  return false;
+}
+
+function DeleteUser(uid){
+  $(".adduser").modal('hide');
+  $(".warningprompt").modal({closable: true}).modal('show').modal('refresh');
+  document.getElementById('warningheader').innerHTML = "Warning: Deleting User!";
+  document.getElementById('warningprompttext').innerHTML = "Are you sure you want to delete this user?  This action is irreversable."
+  document.getElementById('warningbuttoncancel').onclick = function() {
+    $(".warningprompt").modal('hide');
+    $(".adduser").modal({closable: true}).modal('show').modal('refresh');
+  }
+  document.getElementById('warningbuttonsubmit').onclick = function() {
+    document.getElementById('warningbuttonsubmit').className = "ui loading negative right labeled icon button";
+    var postdata = "id=" + uid;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if(this.readyState == 4 && this.status == 200) {
+        if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+          LogoutRedirect();
+        }
+        else if(this.responseText == "1") {
+          document.getElementById('warningbuttonsubmit').className = "ui negative right labeled icon button";
+          $(".warningprompt").modal('hide');
+          $(".adduser").modal('hide');
+          $(".successprompt").modal('show');
+          ReloadUserList();
+          document.getElementById('successprompttext').innerHTML = "User Successfully Deleted!";
+          setTimeout(function() {
+            $(".successprompt").modal('hide');                
+          }, 1000);
+        }
+        else {
+          $(".warningprompt").modal('hide');          
+          document.getElementById('warningbuttonsubmit').className = "ui negative right labeled icon button";
+          document.getElementById('warningbuttonsubmit').innerHTML = "Okay";
+          document.getElementById('warningheader').innerHTML = "Error!";
+          document.getElementById('warningprompttext').innerHTML = this.responseText; 
+          $(".warningprompt").modal('show');          
+          document.getElementById('warningbuttonsubmit').onclick = function() {
+            document.getElementById('warningbuttonsubmit').innerHTML = "Delete<i class=\"cancel icon\"></i>";
+            $(".warningprompt").modal('hide');
+            $(".adduser").modal({closable: true}).modal('show').modal('refresh');
+          }
+        }
+      }
+      if(this.readyState == 4 && this.status != 200) {
+        $(".successprompt").modal('show');
+        document.getElementById('successpromptheader').innerHTML = "Error!";
+        document.getElementById('successpromptmessagebody').className = "ui error message";
+        document.getElementById('successprompttext').innerHTML = "Server Error! Please Try Again";
+        setTimeout(function() {
+          document.getElementById('successpromptheader').innerHTML = "Success";
+          document.getElementById('successpromptmessagebody').className = "ui success message";
+          $(".successprompt").modal('hide');                
+        }, 2000);
+      }
+    }
+    xhttp.open("POST", "/r/user/delete", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(postdata);
+    return false;
+  }
   return false;
 }
 
@@ -98,7 +153,7 @@ $(function(){
             }
           }
         }
-        xhttp.open("POST", "/admin/r/user/add", true);
+        xhttp.open("POST", "/r/user/add", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(postdata);
         return false;
@@ -136,7 +191,7 @@ $(function(){
             }
           }
         }
-        xhttp.open("POST", "/admin/r/user/edit", true);
+        xhttp.open("POST", "/r/user/edit", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(postdata);
         return false;

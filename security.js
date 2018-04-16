@@ -71,7 +71,6 @@ exports.TokenCheck = function(combotoken, res, reqredirect, render, redirectname
       }
       else {
         //Token does not match records.
-        exports.Log(user, "Security: Someone attempted to login as: " + user + " with a modified token.");
         if(reqredirect) {
           res.redirect('/management/?redirect=true&from=' + redirectname);
         } 
@@ -110,7 +109,6 @@ exports.PostTokenCheck = function(req, res, requestname, requesttype, callback) 
               httpOnly: true, 
               signed: true 
             });
-            exports.Log(user, user + " made a request to " + requestname, requesttype);
             callback(true);
           }
           else {
@@ -120,13 +118,12 @@ exports.PostTokenCheck = function(req, res, requestname, requesttype, callback) 
         }
         else {
           //Token does not match records.
-          exports.Log(user, "Security: Someone attempted to make a post request as: " + user + " with a modified token.");
           callback(false);
         }
       }
     });
   }
   else {
-    return false;
+    callback(false);
   }
 };

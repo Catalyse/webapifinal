@@ -50,6 +50,21 @@ function HomeRender(res, user) {
   res.render('home',{title: 'WebAPI Final Home Page'});
 }
 
+router.get('/cart', function(req, res, next) {
+  /*if(req.signedCookies.session != null && req.signedCookies.session != false){
+    general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
+  }
+  else {
+    console.log("Inline redirect due to no token reported by client");
+    res.redirect(307, "/?redirect=true&from=/admin");//no token exists
+  }*/
+  CartRender(res, "TEST");
+});
+
+function CartRender(res, user) {
+  res.render('cart',{title: 'WebAPI Final Cart'});
+}
+
 router.get('/admin', function(req, res, next) {
   /*if(req.signedCookies.session != null && req.signedCookies.session != false){
     general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
