@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  .row
+    .column
+      h2(style='text-align:center;') Welcome Back #{username}
+  .row
+    .column
+      h2(style='text-align:center;') Total Donated is: -Donated-
+  .row(style='margin-top:0px;')
+    h3(style='padding-left:10px;') Past Transactions
+    table.ui.small.selectable.row.celled.expandable.table(style='margin-bottom:0; border-bottom:0;')
+      thead
+        tr
+          th Transaction ID
+          th Item Count
+          th Cost
+          th Donated Amount
+          th Charity
+    .noscrollbar(style="max-height:40vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
+      table.ui.small.selectable.row.celled.expandable.table(style='border-top: 0;')
+        tbody(id='transactiontable')
+  
+  .ui.modal.successprompt
+    .header
+      | Success
+    .ui.success.message(style='margin-left:10px;margin-right:10px;')
+      .header Success
+      p(id='successprompttext') Driver Added!
+    .actions
+      .ui.positive.right.labeled.icon.button
+        | Okay
+        i.checkmark.icon
+
+  .ui.modal.warningprompt
+    .header(id='warningheader')
+      | Warning: Deleting
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.warning.message(style='margin-left:10px;margin-right:10px;')
+      .header Warning
+      p(id='warningprompttext') Driver Added!
+    .actions
+      .ui.right.labeled.button(id='warningbuttoncancel')
+        | Cancel
+      .ui.negative.right.labeled.icon.button(id='warningbuttonsubmit')
+        | Delete
+        i.cancel.icon

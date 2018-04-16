@@ -36,14 +36,12 @@ router.get('/register', function(req, res, next) {
 });
 
 router.get('/home', function(req, res, next) {
-  /*if(req.signedCookies.session != null && req.signedCookies.session != false){
-    general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
+  if(req.signedCookies.session != null && req.signedCookies.session != false){
+    general.TokenCheck(req.signedCookies.session, res, true, HomeRender, '/home', LoginRender, [1]);
   }
   else {
-    console.log("Inline redirect due to no token reported by client");
-    res.redirect(307, "/?redirect=true&from=/admin");//no token exists
-  }*/
-  HomeRender(res, "TEST");
+    res.redirect(307, "/");//no token exists
+  }
 });
 
 function HomeRender(res, user) {
@@ -51,29 +49,41 @@ function HomeRender(res, user) {
 }
 
 router.get('/cart', function(req, res, next) {
-  /*if(req.signedCookies.session != null && req.signedCookies.session != false){
-    general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
+  if(req.signedCookies.session != null && req.signedCookies.session != false){
+    general.TokenCheck(req.signedCookies.session, res, true, CartRender, '/cart', LoginRender, [1]);
   }
   else {
     console.log("Inline redirect due to no token reported by client");
-    res.redirect(307, "/?redirect=true&from=/admin");//no token exists
-  }*/
-  CartRender(res, "TEST");
+    res.redirect(307, "/");//no token exists
+  }
 });
 
 function CartRender(res, user) {
   res.render('cart',{title: 'WebAPI Final Cart'});
 }
 
+router.get('/profile', function(req, res, next) {
+  if(req.signedCookies.session != null && req.signedCookies.session != false){
+    general.TokenCheck(req.signedCookies.session, res, true, ProfileRender, '/profile', LoginRender, [1]);
+  }
+  else {
+    console.log("Inline redirect due to no token reported by client");
+    res.redirect(307, "/");//no token exists
+  }
+});
+
+function ProfileRender(res, user) {
+  res.render('profile',{title: 'WebAPI Final Profile', username: user});
+}
+
 router.get('/admin', function(req, res, next) {
-  /*if(req.signedCookies.session != null && req.signedCookies.session != false){
+  if(req.signedCookies.session != null && req.signedCookies.session != false){
     general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
   }
   else {
     console.log("Inline redirect due to no token reported by client");
     res.redirect(307, "/?redirect=true&from=/admin");//no token exists
-  }*/
-  AdminRender(res, "TEST");
+  }
 });
 
 function AdminRender(res, user){
