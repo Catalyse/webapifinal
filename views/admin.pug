@@ -101,6 +101,97 @@ block content
       .ui.green.right.labeled.icon.button(id='usersubmit')
         | Submit
         i.checkmark.icon
+
+  .ui.modal.addcategory
+    .header(id="categorymodalheader")
+      | System Category Management
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    form.ui.form(style="margin:10px 20px 10px 20px;", method="POST", id='categoryform', name='categoryform')
+      input(value='false', name='categoryEditMode', id='categoryEditMode', type='hidden')
+      input(value='false', name='categoryIDField', id='categoryIDField', type='hidden')
+      .field(id='categorynamefield')
+        label Name
+        input(placeholder='Enter Name', name='categoryname', type='text')
+      .field(id='categorydescriptionfield')
+        label Description
+        input(placeholder='Enter Description', name='categorydescription', type='text')
+      .ui.error.message
+        .header Error
+        p(id='categoryformerrormsg') Error!
+    .actions
+      .ui.red.labeled.icon.button(id='deletecategorybutton', style='float:left')
+        | Delete Category
+        i.delete.icon
+      .ui.neutral.right.labeled.button(onclick='CloseCategoryModal()')
+        | Cancel
+      .ui.green.right.labeled.icon.button(id='categorysubmit')
+        | Submit
+        i.checkmark.icon
+
+  .ui.modal.addproduct
+    .header(id="productmodalheader")
+      | System Product Management
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    form.ui.form(style="margin:10px 20px 10px 20px;", method="POST", id='productform', name='productform')
+      input(value='false', name='productEditMode', id='productEditMode', type='hidden')
+      input(value='false', name='productIDField', id='productIDField', type='hidden')
+      .field(id='productnamefield')
+        label Name
+        input(placeholder='Enter Name', name='productname', type='text')
+      .field(id='productdescriptionfield')
+        label Description
+        input(placeholder='Enter Description', name='productdescription', type='text')
+      .two.fields
+        .field
+          label Quantity
+          input(placeholder='Enter Quantity', name='productquantity', type='number')
+        .field
+          label Cost
+          input(placeholder='Enter Cost', name='productcost', type='number')
+      .field
+        label Product Category
+        select.ui.fluid.search.dropdown(name='productcategory', id='productcategory')
+          option(value='') Choose Category
+          //for category in categories
+          //  option(value='#{category.id}') #{category.name}
+      .ui.error.message
+        .header Error
+        p(id='productformerrormsg') Error!
+    .actions
+      .ui.red.labeled.icon.button(id='deleteproductbutton', style='float:left')
+        | Delete Product
+        i.delete.icon
+      .ui.neutral.right.labeled.button(onclick='CloseProductModal()')
+        | Cancel
+      .ui.green.right.labeled.icon.button(id='productsubmit')
+        | Submit
+        i.checkmark.icon
+
+  .ui.modal.addcharity
+    .header(id="charitymodalheader")
+      | System Charity Management
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    form.ui.form(style="margin:10px 20px 10px 20px;", method="POST", id='charityform', name='charityform')
+      input(value='false', name='charityEditMode', id='charityEditMode', type='hidden')
+      input(value='false', name='charityIDField', id='charityIDField', type='hidden')
+      .field(id='charitynamefield')
+        label Name
+        input(placeholder='Enter Name', name='charityname', type='text')
+      .field(id='charitydescriptionfield')
+        label Description
+        input(placeholder='Enter Description', name='charitydescription', type='text')
+      .ui.error.message
+        .header Error
+        p(id='charityformerrormsg') Error!
+    .actions
+      .ui.red.labeled.icon.button(id='deletecharitybutton', style='float:left')
+        | Delete charity
+        i.delete.icon
+      .ui.neutral.right.labeled.button(onclick='CloseCharityModal()')
+        | Cancel
+      .ui.green.right.labeled.icon.button(id='charitysubmit')
+        | Submit
+        i.checkmark.icon
   
   .ui.modal.successprompt
     .header
