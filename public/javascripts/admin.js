@@ -203,6 +203,7 @@ $(function(){
   });
 });
 //End User Modal Functions ----------------------------------------------------------------------------------------------
+
 //List Reloading Functions ----------------------------------------------------------------------------------------------
 function ReloadUserList() {
   var userTable = document.getElementById('usertable');
