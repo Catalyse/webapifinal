@@ -8,8 +8,8 @@ router.get('/', function(req, res, next) {
     LoginRender(res, true, req.query.from);
   }
   else {
-    if(req.signedCookies.session != null && req.signedCookies.session != false){//IF there is already a valid cookie we want to just throw them at the dashboard.
-      general.TokenCheck(req.signedCookies.session, res, false, DashboardRender, '/dashboard', LoginRender, [1,2,3]);
+    if(req.signedCookies.session != null && req.signedCookies.session != false){//IF there is already a valid cookie we want to just throw them at the homescreen.
+      general.TokenCheck(req.signedCookies.session, res, false, HomeRender, '/home', LoginRender, [1,2,3]);
     }
     else {
       LoginRender(res, false);
@@ -22,7 +22,7 @@ function LoginRender(res, returnto, returntolocation) {
     res.render("login", {returnLocation: returntolocation});
   }
   else{
-    res.render("login", {returnLocation: '/dashboard'});
+    res.render("login", {returnLocation: '/home'});
   }
 }
 
