@@ -126,30 +126,34 @@ function SelectCharity() {
   $(".checkout").modal('hide');
   $(".charity").modal({closable: true}).modal('show').modal('refresh');
   document.getElementById('donatebuttonsubmit').onclick = function() {
-    document.getElementById('donatebuttonsubmit').classList.add('loading');
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if(this.readyState == 4 && this.status == 200) {    
-        document.getElementById('donatebuttonsubmit').classList.remove('loading');    
-        if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
-          LogoutRedirect();
+    ValidateCharitySelection(function(result) {
+      if(result == true) {
+        document.getElementById('donatebuttonsubmit').classList.add('loading');
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if(this.readyState == 4 && this.status == 200) {    
+            document.getElementById('donatebuttonsubmit').classList.remove('loading');    
+            if(this.responseText.indexOf("$$REDIRECT$$") !== -1) {
+              LogoutRedirect();
+            }
+            else if(this.responseText.indexOf("Error") !== -1 || this.responseText.indexOf("error") !== -1) {
+              alert("Error: " + this.responseText);
+            }
+            else {
+              ReloadCartList();
+              $(".successprompt").modal('show');
+              document.getElementById('successprompttext').innerHTML = "Checkout and Donation Complete!";
+              setTimeout(function() {
+                $(".successprompt").modal('hide');                
+              }, 2000);
+            }
+          }
         }
-        else if(this.responseText.indexOf("Error") !== -1 || this.responseText.indexOf("error") !== -1) {
-          alert("Error: " + this.responseText);
-        }
-        else {
-          ReloadCartList();
-          $(".successprompt").modal('show');
-          document.getElementById('successprompttext').innerHTML = "Checkout and Donation Complete!";
-          setTimeout(function() {
-            $(".successprompt").modal('hide');                
-          }, 2000);
-        }
+        xhttp.open("POST", "/r/transaction/add/true/" + document.getElementById('charitylist').value, true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send();
       }
-    }
-    xhttp.open("POST", "/r/transaction/add/true/" + document.getElementById('charitylist').value, true);
-    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send();
+    });
   }
 }
 
