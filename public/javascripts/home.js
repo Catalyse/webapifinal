@@ -22,8 +22,8 @@ function AddProduct(id) {
   $(".addproduct").modal({closable: true}).modal('show').modal('refresh');
   document.getElementById('addproductbuttonsubmit').onclick = function() {
     ValidateProductForm(function(result) {
-      document.getElementById('addproductbuttonsubmit').classList.add('loading');
       if(result) {
+        document.getElementById('addproductbuttonsubmit').classList.add('loading');
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if(this.readyState == 4 && this.status == 200) {
