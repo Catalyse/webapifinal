@@ -6,7 +6,7 @@ var general = require('../security');
 router.post('/add/:id', function(req, res) {
   general.PostTokenCheck(req, res, "cart/add", "ADD", function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `cart` WHERE uid = " + general.mysql.escape(req.params.id), function(error, result) {
+      general.pool.query("SELECT * FROM `cart` WHERE complete = 0 AND uid = " + general.mysql.escape(req.params.id), function(error, result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }
@@ -55,7 +55,7 @@ router.post('/item/add/:id/:quantity', function(req, res) {
         }
         else {
           var uid = result[0].id;
-          general.pool.query("SELECT * FROM `cart` WHERE uid = " + uid, function(error, result) {
+          general.pool.query("SELECT * FROM `cart` WHERE complete = 0 AND uid = " + uid, function(error, result) {
             if(error) {
               res.send("There was an error making the query! :: " + error.message);
             }
@@ -74,7 +74,7 @@ router.post('/item/add/:id/:quantity', function(req, res) {
                       else {
                         var contents = cart.contents + "$$" + req.params.id + "%" + req.params.quantity;
                       }
-                      general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(contents) + " WHERE uid = " + uid, function(error, result) {
+                      general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(contents) + " WHERE complete = 0 AND uid = " + uid, function(error, result) {
                         if(error) {
                           res.send("There was an error making the query! :: " + error.message);
                         }
@@ -92,7 +92,7 @@ router.post('/item/add/:id/:quantity', function(req, res) {
               else {
                 AddCart(uid, function(result) {
                   if(result == '1') {
-                    general.pool.query("SELECT * FROM `cart` WHERE uid = " + uid, function(error, result) {
+                    general.pool.query("SELECT * FROM `cart` WHERE complete = 0 AND uid = " + uid, function(error, result) {
                       if(error) {
                         res.send("There was an error making the query! :: " + error.message);
                       }
@@ -110,7 +110,7 @@ router.post('/item/add/:id/:quantity', function(req, res) {
                               else {
                                 var contents = contents + "$$" + req.params.id + "%" + req.params.quantity;
                               }
-                              general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(contents) + " WHERE uid = " + uid, function(error, result) {
+                              general.pool.query("UPDATE `cart` SET `contents` = " + general.mysql.escape(contents) + " WHERE complete = 0 AND uid = " + uid, function(error, result) {
                                 if(error) {
                                   res.send("There was an error making the query! :: " + error.message);
                                 }

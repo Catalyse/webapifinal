@@ -20,6 +20,12 @@ block content
     .noscrollbar(style="max-height:40vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
       table.ui.small.selectable.row.celled.expandable.table(style='border-top: 0;')
         tbody(id='carttable')
+  .row
+    .column
+      h3(id='totalcost', style='float:right;') Total Cost: 
+  .row
+    .column
+      .ui.primary.button(style='float:right', onclick='Checkout()') Checkout
   
   .ui.modal.clearcart
     .header(id='clearcartheader')
@@ -45,6 +51,44 @@ block content
         | Cancel
       .ui.red.right.labeled.icon.button(id='clearitembuttonsubmit')
         | Remove Item
+        i.check.icon
+           
+  .ui.modal.checkout
+    .header(id='checkoutheader')
+      | Checkout?
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.info.message(style='margin-left:10px;margin-right:10px;')
+      p(id='checkoutprompttext') If you want to donate to charity click the Checkout+Roundup button to roundup to the nearest dollar when you checkout!
+    .actions
+      .ui.right.labeled.button(onclick='CloseCheckoutModal()')
+        | Cancel
+      .ui.green.right.labeled.icon.button(id='checkoutcharitybuttonsubmit')
+        | Checkout+Roundup
+        i.check.icon
+      .ui.green.right.labeled.icon.button(id='checkoutbuttonsubmit')
+        | Checkout
+        i.check.icon
+
+  .ui.modal.charity
+    .header(id='charityheader')
+      | Who do you want to donate to?
+    i.close.icon(style="top: 1.0535rem;right: 1rem;color: rgba(0,0,0,.87);")
+    .ui.info.message(style='margin-left:10px;margin-right:10px;')
+      p(id='checkoutprompttext') Please select a charity!
+    .ui.segment
+      .ui.form
+        .field(id='charitylistfield')
+          label Available Charities
+          select.ui.fluid.search.dropdown(name='charitylist', id='charitylist')
+            option(value='') Choose Charity
+    .ui.error.message.hidden(id='chairtyerrorfield')
+      .header Must Select Charity!
+      p You must select a charity!
+    .actions
+      .ui.right.labeled.button(onclick='CloseCharityModal()')
+        | Cancel
+      .ui.green.right.labeled.icon.button(id='donatebuttonsubmit')
+        | Donate!
         i.check.icon
 
   .ui.modal.successprompt

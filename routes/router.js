@@ -73,7 +73,30 @@ router.get('/profile', function(req, res, next) {
 });
 
 function ProfileRender(res, user) {
-  res.render('profile',{title: 'WebAPI Final Profile', username: user});
+  general.pool.query("SELECT * FROM `user` WHERE username = " + general.mysql.escape(user), function(error, result) {
+    if(error) {
+      res.send("There was an error loading the page! :: " + error.message);
+    }
+    else {
+      var donated = result[0].donated;
+      general.pool.query("SELECT * FROM `transaction` WHERE `uid` = " + general.mysql.escape(result[0].id), function(error, result) {
+        if(error) {
+          res.send("There was an error loading the page! :: " + error.message);
+        }
+        else {
+          var transactions = result;
+          general.pool.query("SELECT * FROM `charity`", function(error, result) {
+            if(error) {
+              res.send("There was an error loading the page! :: " + error.message);
+            }
+            else {
+              res.render('profile',{title: 'WebAPI Final Profile', username: user, donated: donated, transactions: transactions, charities: result});
+            }
+          });
+        }
+      });
+    }
+  });
 }
 
 router.get('/admin', function(req, res, next) {

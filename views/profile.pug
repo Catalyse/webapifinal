@@ -6,7 +6,7 @@ block content
       h2(style='text-align:center;') Welcome Back #{username}
   .row
     .column
-      h2(style='text-align:center;') Total Donated is: -Donated-
+      h2(style='text-align:center;') Total Donated is: #{donated}
   .row(style='margin-top:0px;')
     h3(style='padding-left:10px;') Past Transactions
     table.ui.small.selectable.row.celled.expandable.table(style='margin-bottom:0; border-bottom:0;')
@@ -20,6 +20,22 @@ block content
     .noscrollbar(style="max-height:40vh; width:100%; display:block; overflow-y:auto; overflow-x: overlay; border-bottom:1px solid rgba(34,36,38,.15);border-radius:.28571429rem;")
       table.ui.small.selectable.row.celled.expandable.table(style='border-top: 0;')
         tbody(id='transactiontable')
+          if transactions.length > 0
+            for transaction in transactions
+              tr
+                - var contents = transaction.items.split("$$");
+                - var count = 0;
+                - for(i = 0; i < contents.length; i++) {count += (1 * contents[i].split("%")[1]);}
+                td(style='width:20%;') #{transaction.id}
+                td(style='width:20%;') #{count}
+                td(style='width:20%;') #{transaction.totalcost}
+                td(style='width:20%;') #{transaction.donatedamount}
+                if transaction.charity == '-1'
+                  td(style='width:20%;') Did not Donate
+                else
+                  for charity in charities
+                    if charity.id == transaction.charity
+                      td(style='width:20%;') #{charity.name}
   
   .ui.modal.successprompt
     .header
