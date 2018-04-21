@@ -392,7 +392,7 @@ $(function(){
             }
           }
         }
-        xhttp.open("POST", "/r/category/edit", true);
+        xhttp.open("POST", "/r/category/edit/" + document.getElementById("categoryIDField").value, true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(postdata);
         return false;
@@ -592,7 +592,7 @@ $(function(){
             }
           }
         }
-        xhttp.open("POST", "/r/product/edit", true);
+        xhttp.open("POST", "/r/product/edit/" + document.getElementById("productIDField").value, true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(postdata);
         return false;
@@ -783,7 +783,7 @@ $(function(){
             }
           }
         }
-        xhttp.open("POST", "/r/charity/edit", true);
+        xhttp.open("POST", "/r/charity/edit/" + document.getElementById("charityIDField").value, true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send(postdata);
         return false;
