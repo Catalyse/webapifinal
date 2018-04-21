@@ -319,7 +319,7 @@ function DeleteCategory(id){
         }, 2000);
       }
     }
-    xhttp.open("POST", "/r/category/delete", true);
+    xhttp.open("DELETE", "/r/category/delete", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postdata);
     return false;
@@ -519,7 +519,7 @@ function DeleteProduct(id){
         }, 2000);
       }
     }
-    xhttp.open("POST", "/r/product/delete", true);
+    xhttp.open("DELETE", "/r/product/delete", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postdata);
     return false;
@@ -716,7 +716,7 @@ function DeleteCharity(id){
         }, 2000);
       }
     }
-    xhttp.open("POST", "/r/charity/delete", true);
+    xhttp.open("DELETE", "/r/charity/delete", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send(postdata);
     return false;
