@@ -275,7 +275,6 @@ function DeleteCategory(id){
   }
   document.getElementById('warningbuttonsubmit').onclick = function() {
     document.getElementById('warningbuttonsubmit').className = "ui loading negative right labeled icon button";
-    var postdata = "id=" + id;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if(this.readyState == 4 && this.status == 200) {
@@ -319,9 +318,9 @@ function DeleteCategory(id){
         }, 2000);
       }
     }
-    xhttp.open("DELETE", "/r/category/delete", true);
+    xhttp.open("DELETE", "/r/category/" + id, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(postdata);
+    xhttp.send();
     return false;
   }
   return false;
@@ -475,7 +474,6 @@ function DeleteProduct(id){
   }
   document.getElementById('warningbuttonsubmit').onclick = function() {
     document.getElementById('warningbuttonsubmit').className = "ui loading negative right labeled icon button";
-    var postdata = "id=" + id;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if(this.readyState == 4 && this.status == 200) {
@@ -519,9 +517,9 @@ function DeleteProduct(id){
         }, 2000);
       }
     }
-    xhttp.open("DELETE", "/r/product/delete", true);
+    xhttp.open("DELETE", "/r/product/" + id, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(postdata);
+    xhttp.send();
     return false;
   }
   return false;
@@ -672,7 +670,6 @@ function DeleteCharity(id){
   }
   document.getElementById('warningbuttonsubmit').onclick = function() {
     document.getElementById('warningbuttonsubmit').className = "ui loading negative right labeled icon button";
-    var postdata = "id=" + id;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
       if(this.readyState == 4 && this.status == 200) {
@@ -716,9 +713,9 @@ function DeleteCharity(id){
         }, 2000);
       }
     }
-    xhttp.open("DELETE", "/r/charity/delete", true);
+    xhttp.open("DELETE", "/r/charity/" + id, true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send(postdata);
+    xhttp.send();
     return false;
   }
   return false;

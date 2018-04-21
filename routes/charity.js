@@ -88,7 +88,7 @@ router.post('/edit/:id', function(req, res) {
 router.delete('/:id', function(req, res) {
   general.PostTokenCheck(req, res, "charity/delete", "DELETE/ID=" + req.params.id, function(result) {
     if(result == true) {
-      general.pool.query("SELECT * FROM `charity` WHERE id = " + req.params.id, function(error,result) {
+      general.pool.query("SELECT * FROM `charity` WHERE id = " + general.mysql.escape(req.params.id), function(error,result) {
         if(error) {
           res.send("There was an error making the query! :: " + error.message);
         }
