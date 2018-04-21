@@ -99,22 +99,22 @@ function Checkout() {
         }
       }
     }
-    xhttp.open("POST", "/r/transaction/add/false/null/null", true);
+    xhttp.open("POST", "/r/transaction/add/false/null", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send();
   }
 }
 
-function ValidateCharitySelection() {
+function ValidateCharitySelection(finishfunction) {
   document.getElementById('charitylistfield').classList.remove('error');
   document.getElementById('chairtyerrorfield').classList.add('hidden');
   if(document.getElementById('charitylist').value == '') {
     document.getElementById('charitylistfield').classList.add('error');
     document.getElementById('chairtyerrorfield').classList.remove('hidden');
-    return false;
+    finishfunction(false);
   }
   else {
-    return true;
+    finishfunction(true);
   }
 }
 
