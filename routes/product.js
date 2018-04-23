@@ -33,7 +33,7 @@ router.post('/edit/:id', function(req, res) {
         else {
           if(result.length > 0) {
             general.pool.query("UPDATE `product` SET `name` = " + general.mysql.escape(req.body.name) 
-            + ", `cost` = " + general.mysql.escape(req.body.cost) + + ", `description` = " + general.mysql.escape(req.body.description) 
+            + ", `cost` = " + general.mysql.escape(req.body.cost) + ", `description` = " + general.mysql.escape(req.body.description) 
             + ", `quantity` = " + general.mysql.escape(req.body.quantity) + ", `category` = " + general.mysql.escape(req.body.category) 
             + " WHERE id = " + general.mysql.escape(req.params.id), function(error, result) {
               if(error) {
