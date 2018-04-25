@@ -1,3 +1,9 @@
+/*
+File: router.js
+Purpose: sets up functionality for the routes
+*/
+
+
 var express = require('express');
 var router = express.Router();
 var general = require('../security');

@@ -1,3 +1,9 @@
+/*
+File: request.js
+Purpose: sets up functionality for a request
+*/
+
+
 var express = require('express');
 var router = express.Router();
 var passcrypt = require('password-hash-and-salt');

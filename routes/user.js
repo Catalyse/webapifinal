@@ -1,3 +1,8 @@
+/*
+File: user.js
+Purpose: sets up functionality for a user
+*/
+
 var express = require('express');
 var router = express.Router();
 var passcrypt = require("password-hash-and-salt");

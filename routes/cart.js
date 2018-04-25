@@ -1,3 +1,8 @@
+/*
+File: cart.js
+Purpose: sets up functionality for a cart
+*/
+
 var express = require('express');
 var router = express.Router();
 var general = require('../security');
@@ -14,7 +19,7 @@ router.post('/add/:id', function(req, res) {
           if(result.length > 0) {
             res.send("Your old cart must be deleted before creating a new one!");
           }
-          else {
+          else { //Correct inserting into cart 
             general.pool.query("INSERT INTO `cart` (`uid`) VALUES (" + general.mysql.escape(req.params.id) + ");", function(error, result) {
               if(error) {
                 res.send("There was an error making the query! :: " + error.message);

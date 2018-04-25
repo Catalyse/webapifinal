@@ -1,3 +1,8 @@
+/*
+File: charity.js
+Purpose: sets up functionality for a charity
+*/
+
 var express = require('express');
 var router = express.Router();
 var general = require('../security');
