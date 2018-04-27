@@ -89,6 +89,9 @@ function Checkout() {
         else if(this.responseText.indexOf("Error") !== -1 || this.responseText.indexOf("error") !== -1) {
           alert("Error: " + this.responseText);
         }
+        else if (this.responseText != "1") {
+          alert("One or more of the items in your cart is not available in the quantity you want!");
+        }
         else {
           ReloadCartList();
           $(".successprompt").modal('show');
