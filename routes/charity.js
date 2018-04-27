@@ -94,14 +94,26 @@ router.delete('/:id', function(req, res) {
         }
         else {
           if(result.length > 0) {
-            general.pool.query("DELETE FROM `charity` WHERE `id` = " + general.mysql.escape(req.params.id), function(error, result) {
+            general.pool.query("SELECT * FROM `transaction` WHERE charity = " + general.mysql.escape(req.params.id), function(error, result) {
               if(error) {
                 res.send("There was an error making the query! :: " + error.message);
               }
               else {
-                res.send('1');
+                if(result.length > 0) {
+                  res.send("Unable to delete charity. It has dependencies!");
+                }
+                else {
+                  general.pool.query("DELETE FROM `charity` WHERE `id` = " + general.mysql.escape(req.params.id), function(error, result) {
+                    if(error) {
+                      res.send("There was an error making the query! :: " + error.message);
+                    }
+                    else {
+                      res.send('1');
+                    }
+                  });
+                }
               }
-            })
+            });
           }
           else {
             res.send('$$NORESULT$$');
