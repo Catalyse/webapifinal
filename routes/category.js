@@ -1,3 +1,8 @@
+/*
+File: category.js
+Purpose: sets up functionality for a category
+*/
+
 var express = require('express');
 var router = express.Router();
 var general = require('../security');
