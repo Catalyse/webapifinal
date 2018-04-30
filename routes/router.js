@@ -32,15 +32,19 @@ function LoginRender(res, returnto, returntolocation) {
   }
 }
 
+//This method clears the session cookie from your browser, and reloads the page to root
 router.get('/logout', function(req, res, next) {
   res.clearCookie("session");
   res.redirect(307, "/");
 });
 
+//This is a pug endpoint to present the registration page
 router.get('/register', function(req, res, next) {
   res.render('register');
 });
 
+//This is a auth endpoint to present the home page, which also verifies auth before presenting the page.
+//If auth fails the user is redirected to the login page.
 router.get('/home', function(req, res, next) {
   if(req.signedCookies.session != null && req.signedCookies.session != false){
     general.TokenCheck(req.signedCookies.session, res, true, HomeRender, '/home', LoginRender, [1]);
@@ -50,10 +54,13 @@ router.get('/home', function(req, res, next) {
   }
 });
 
+//This is the function called if auth is successful
 function HomeRender(res, user) {
   res.render('home',{title: 'WebAPI Final Home Page'});
 }
 
+//This is a auth endpoint to present the home page, which also verifies auth before presenting the page.
+//If auth fails the user is redirected to the login page.
 router.get('/cart', function(req, res, next) {
   if(req.signedCookies.session != null && req.signedCookies.session != false){
     general.TokenCheck(req.signedCookies.session, res, true, CartRender, '/cart', LoginRender, [1]);
@@ -64,10 +71,13 @@ router.get('/cart', function(req, res, next) {
   }
 });
 
+//This is the function called if auth is successful
 function CartRender(res, user) {
   res.render('cart',{title: 'WebAPI Final Cart'});
 }
 
+//This is a auth endpoint to present the home page, which also verifies auth before presenting the page.
+//If auth fails the user is redirected to the login page.
 router.get('/profile', function(req, res, next) {
   if(req.signedCookies.session != null && req.signedCookies.session != false){
     general.TokenCheck(req.signedCookies.session, res, true, ProfileRender, '/profile', LoginRender, [1]);
@@ -78,6 +88,7 @@ router.get('/profile', function(req, res, next) {
   }
 });
 
+//This is the function called if auth is successful
 function ProfileRender(res, user) {
   general.pool.query("SELECT * FROM `user` WHERE username = " + general.mysql.escape(user), function(error, result) {
     if(error) {
@@ -105,6 +116,8 @@ function ProfileRender(res, user) {
   });
 }
 
+//This is a auth endpoint to present the home page, which also verifies auth before presenting the page.
+//If auth fails the user is redirected to the login page.
 router.get('/admin', function(req, res, next) {
   if(req.signedCookies.session != null && req.signedCookies.session != false){
     general.TokenCheck(req.signedCookies.session, res, true, AdminRender, '/admin', LoginRender, [1]);
@@ -115,6 +128,7 @@ router.get('/admin', function(req, res, next) {
   }
 });
 
+//This is the function called if auth is successful
 function AdminRender(res, user){
   general.pool.query("SELECT * FROM `user`", function (err, result, fields) {
     if(err){
