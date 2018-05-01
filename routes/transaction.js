@@ -135,7 +135,7 @@ router.post('/add/:donating/:charity', function(req, res) {
     }
   });
 });
-
+//Delete Function
 router.delete('/:id', function(req, res) {
   general.PostTokenCheck(req, res, "transaction/delete", "DELETE/ID=" + req.params.id, function(result) {
     if(result == true) {
@@ -165,7 +165,7 @@ router.delete('/:id', function(req, res) {
     }
   });
 });
-
+//Get Function
 router.get('/:id', function(req, res) {
   general.PostTokenCheck(req, res, "product/get", "GET", function(result) {
     if(result == true) {
